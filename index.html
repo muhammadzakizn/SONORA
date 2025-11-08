@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONORA - Studio Suasana Relaksasi Spasial</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- Tone.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Loading Screen - Netflix Style */
+        #loadingScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1s ease, backdrop-filter 1s ease;
+        }
+
+        #loadingScreen.blur-phase {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        #loadingScreen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.6);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        .loading-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .loading-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-top-color: #764ba2;
+            animation-delay: 0.2s;
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-top-color: #f093fb;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Loading Progress Bar */
+        .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 2rem auto 1rem;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 10px;
+            width: 0%;
+            animation: loadProgress 2.5s ease-out forwards;
+        }
+
+        @keyframes loadProgress {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 60%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Dihapus keyframes pulse lama, karena ada duplikat (pulse-red) */
+
+        /* Animated Background */
+        /* body::before DIHAPUS untuk memberi ruang bagi video background */
+        /* DIKEMBALIKAN: Background animasi CSS yang stabil */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Warna merah marun/darah/horor */
+            background: linear-gradient(135deg, #4d0000 0%, #8b0000 50%, #3a0000 100%);
+            z-index: -2;
+            transition: background 0.5s ease; /* Transisi untuk light mode */
+        }
+
+        body.light-mode::before {
+            background: linear-gradient(135deg, #DC143C 0%, #FFB6C1 30%, #FFF0F5 60%, #FFE4E1 100%);
+        }
+        
+
+        /* body::after tetap dipertahankan sebagai overlay video */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                /* GRADIENT BARU (VIGNETTE) */
+                linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 20%),
+                linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 20%),
+                /* GRADIENT LAMA (RADIAL) */
+                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(139, 0, 0, 0.3) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+            transition: background 0.5s ease; /* Transisi untuk light mode */
+        }
+
+        body.light-mode::after {
+            background:
+                radial-gradient(circle at 20% 50%, rgba(220, 20, 60, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(178, 34, 34, 0.15) 0%, transparent 50%);
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Liquid Glass Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow:
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        body.light-mode .glass {
+             background: rgba(255, 255, 255, 0.3);
+             border-color: rgba(255, 255, 255, 0.5);
+             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow:
+                0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        body.light-mode .glass-dark {
+             background: rgba(255, 255, 255, 0.2);
+             border-color: rgba(255, 255, 255, 0.3);
+             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .glass:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 12px 40px 0 rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Navbar (digunakan di BerandaPage) */
+        /* Hapus .navbar.glass-dark */
+        .navbar-transparent {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            /* border-bottom: 1px solid rgba(255, 255, 255, 0.2); -- DIHILANGKAN */
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+        body.light-mode .navbar-transparent {
+            background: transparent;
+            /* border-bottom-color: rgba(139, 0, 0, 0.3); -- DIHILANGKAN */
+        }
+        body.light-mode .navbar-transparent .nav-link,
+        body.light-mode .navbar-transparent .navbar-brand {
+             color: #3a0000;
+        }
+
+        /* BARU: Interaksi Fitur di Beranda */
+        .feature-box {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-box:hover {
+            background: rgba(255, 255, 255, 0.1); /* Efek hover lebih terang */
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-5px); /* Efek mengangkat */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        body.light-mode .feature-box {
+             border-color: rgba(220, 20, 60, 0.2);
+        }
+
+        body.light-mode .feature-box:hover {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(220, 20, 60, 0.5);
+        }
+
+        /* BARU: Style untuk Modal */
+        .modal-glass {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        body.light-mode .modal-glass {
+            background: rgba(255, 255, 255, 0.6);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        body.light-mode .modal-glass .modal-header,
+        body.light-mode .modal-glass .modal-footer {
+            border-color: rgba(139, 0, 0, 0.2);
+        }
+
+        /* Auth Pages */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .auth-box {
+            max-width: 450px;
+            width: 100%;
+            padding: 3rem;
+            border-radius: 30px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Ubah warna gradien logo auth menjadi merah */
+        .auth-logo {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4);
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .form-control,
+        body.light-mode .form-select {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(220, 20, 60, 0.3);
+            color: #3a0000;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        body.light-mode .form-control:focus,
+        body.light-mode .form-select:focus {
+             background: rgba(255, 255, 255, 0.5);
+             border-color: rgba(220, 20, 60, 0.5);
+             color: #3a0000;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        body.light-mode .form-control::placeholder {
+             color: rgba(139, 0, 0, 0.6);
+        }
+
+        .btn-glass {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.4);
+        }
+        
+        body.light-mode .btn-glass {
+             box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
+        }
+
+        .btn-glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 0, 0, 0.6);
+            color: white;
+        }
+        
+        body.light-mode .btn-glass:hover {
+             box-shadow: 0 8px 30px rgba(139, 0, 0, 0.4);
+        }
+
+        .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(220, 20, 60, 0.4);
+            color: #8b0000;
+        }
+
+        .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            color: white;
+        }
+        
+        body.light-mode .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(220, 20, 60, 0.6);
+            color: #3a0000;
+        }
+        
+        /* Floating Taskbar (BerandaPage) */
+        .floating-taskbar {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.75rem 1rem;
+            border-radius: 99px; /* pill shape */
+            z-index: 100;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .floating-taskbar .btn-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        
+        .floating-taskbar .btn {
+            padding-top: 0.6rem;
+            padding-bottom: 0.6rem;
+        }
+
+        /* Main App */
+        .sonora-header {
+            padding: 2rem;
+            border-radius: 25px;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .sonora-logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.4);
+        }
+        
+        body.light-mode .sonora-logo {
+             box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
+        }
+
+        .user-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        body.light-mode .user-badge {
+             background: rgba(255, 255, 255, 0.3);
+             border-color: rgba(220, 20, 60, 0.3);
+        }
+
+        .card-channel {
+            transition: all 0.4s ease;
+            border: none;
+            overflow: hidden;
+            border-radius: 25px;
+            padding: 1.5rem;
+        }
+
+        .card-channel:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .channel-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        .play-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        body.light-mode .play-btn {
+             background: rgba(255, 255, 255, 0.4);
+             color: #3a0000;
+        }
+
+        .play-btn.active {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6);
+            animation: pulse-red 2s ease-in-out infinite;
+            color: white; /* Pastikan ikon tetap putih saat aktif */
+        }
+        
+        body.light-mode .play-btn.active {
+             box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes pulse-red {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(220, 20, 60, 0.9);
+            }
+        }
+        
+        /* Custom Range Slider */
+        .form-range {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            outline: none;
+        }
+        
+        body.light-mode .form-range {
+             background: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-range::-webkit-slider-thumb {
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 3px 10px rgba(139, 0, 0, 0.5);
+        }
+
+        .form-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #dc143c, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        body.light-mode .timer-display {
+             text-shadow: 0 5px 15px rgba(139, 0, 0, 0.1);
+        }
+
+        .preset-badge {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .preset-badge {
+             background: rgba(255, 255, 255, 0.3);
+             border-color: rgba(220, 20, 60, 0.3);
+        }
+
+        .preset-badge:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+        
+        body.light-mode .preset-badge:hover {
+             background: rgba(255, 255, 255, 0.5);
+        }
+
+        .music-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 15px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        body.light-mode .music-item {
+             background: rgba(255, 255, 255, 0.25);
+             border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .music-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+        
+        body.light-mode .music-item:hover {
+             background: rgba(255, 255, 255, 0.4);
+        }
+
+        .text-white,
+        body.light-mode .text-dark {
+             color: #fff !important;
+        }
+        
+        .text-white-soft,
+        body.light-mode .text-dark-soft {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .text-white-muted,
+        body.light-mode .text-dark-muted {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+        
+        body.light-mode .text-white,
+        body.light-mode .text-white-soft,
+        body.light-mode .text-white-muted {
+             color: #3a0000 !important;
+        }
+        
+        body.light-mode .text-white-muted {
+             color: rgba(139, 0, 0, 0.7) !important;
+        }
+        
+        body.light-mode .text-danger {
+             color: #8b0000 !important;
+        }
+
+        .border-accent {
+            border-left: 4px solid;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s infinite;
+        }
+        
+        body.light-mode .particle {
+             background: rgba(220, 20, 60, 0.3);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        body.light-mode ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        body.light-mode ::-webkit-scrollbar-thumb {
+            background: rgba(220, 20, 60, 0.3);
+        }
+        body.light-mode ::-webkit-scrollbar-thumb:hover {
+            background: rgba(220, 20, 60, 0.5);
+        }
+
+        /* BARU: Animasi Teks Beranda */
+        .animated-title-container {
+            overflow: hidden; /* Sembunyikan teks yang keluar */
+            height: 1.2em; /* Sesuaikan dengan font-size & line-height */
+            line-height: 1.2em;
+            display: inline-block;
+            vertical-align: bottom; /* Sejajarkan dengan teks di sekitarnya */
+        }
+
+        .animated-word {
+            display: inline-block;
+            animation: slideUp 12s infinite; /* 12s total, 3s per kata */
+        }
+
+        .animated-word span {
+            display: block;
+            height: 1.2em;
+            line-height: 1.2em;
+            color: #ff6b6b; /* Warna highlight (merah muda) */
+            padding-bottom: 0.1em; /* Jarak agar pas */
+        }
+        
+        body.light-mode .animated-word span {
+            color: #8b0000; /* Warna highlight di light mode (merah tua) */
+        }
+
+        @keyframes slideUp {
+            0%   { transform: translateY(0); }       /* Spasial */
+            20%  { transform: translateY(0); }       /* Tahan Spasial */
+            25%  { transform: translateY(-1.2em); }  /* Geser ke Tidur */
+            45%  { transform: translateY(-1.2em); }  /* Tahan Tidur */
+            50%  { transform: translateY(-2.4em); }  /* Geser ke Pikiran */
+            70%  { transform: translateY(-2.4em); }  /* Tahan Pikiran */
+            75%  { transform: translateY(-3.6em); }  /* Geser ke Fokus */
+            95%  { transform: translateY(-3.6em); }  /* Tahan Fokus */
+            100% { transform: translateY(0); }       /* Geser kembali ke Spasial */
+        }
+        
+
+        /* Loading Screen Red Theme */
+        #loadingScreen .loading-logo {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            box-shadow: 0 20px 60px rgba(139, 0, 0, 0.6);
+        }
+        #loadingScreen .loading-title {
+            text-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);
+        }
+        #loadingScreen .spinner-ring {
+            border-top-color: #8b0000;
+        }
+        #loadingScreen .spinner-ring:nth-child(2) {
+            border-top-color: #dc143c;
+        }
+        #loadingScreen .spinner-ring:nth-child(3) {
+            border-top-color: #ff6b6b;
+        }
+        #loadingScreen .loading-progress-bar {
+            background: linear-gradient(90deg, #8b0000, #dc143c, #ff6b6b);
+        }
+
+        /* CSS BARU: Video Background -- DIHAPUS */
+        /*
+        #video-background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        #video-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        */
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Video Background Container BARU -- DIHAPUS -->
+    <!--
+    <div id="video-background-container">
+        <video autoplay loop muted playsinline id="video-bg">
+        </video>
+    </div>
+    -->
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i class="bi bi-wind text-white" style="font-size: 4rem;"></i>
+            </div>
+            <h1 class="loading-title">SONORA</h1>
+            <p class="loading-subtitle">Studio Suasana Relaksasi Spasial</p>
+
+            <div class="loading-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+                <div class="spinner-ring"></div>
+            </div>
+
+            <div class="loading-progress">
+                <div class="loading-progress-bar"></div>
+            </div>
+
+            <p class="loading-text">Mempersiapkan pengalaman audio...</p>
+        </div>
+    </div>
+
+    <!-- Floating Particles -->
+    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+    <div class="particle" style="left: 30%; animation-delay: 3s;"></div>
+    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
+    <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
+
+    <!-- Halaman Beranda Baru (Struktur Diubah) -->
+    <div id="berandaPage" style="display: none; padding-top: 90px; padding-bottom: 120px;">
+        <!-- Padding disesuaikan untuk navbar dan taskbar fixed -->
+
+        <!-- Navbar Baru -->
+        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent"> <!-- Kelas diubah -->
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+                    <!-- Logo disamakan dengan header mainApp -->
+                    <div class="sonora-logo" style="width: 45px; height: 45px; font-size: 1.7rem; border-radius: 12px;">
+                        <i class="bi bi-wind text-white"></i>
+                    </div>
+                    <h5 class="mb-0 text-white fw-bold">SONORA</h5>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Konten Beranda -->
+        <div class="container">
+            <div class="row align-items-center justify-content-center text-center text-white" style="min-height: 70vh;">
+                <div class="col-lg-9">
+                    <!-- DIUBAH: Menghapus 'white-space: nowrap;' dari inline style -->
+                    <h1 class="display-3 fw-bold mb-3" style="text-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);">
+                        Studio Relaksasi 
+                        <div class="animated-title-container">
+                            <div class="animated-word" id="animatedWord">
+                                <span>Spasial</span>
+                                <span>Tidur</span>
+                                <span>Pikiran</span>
+                                <span>Fokus</span>
+                            </div>
+                        </div>
+                         Anda
+                    </h1>
+                    <p class="fs-5 text-white-muted mb-5">
+                        Ciptakan suasana tenang Anda. Gabungkan suara alam, atur audio 3D,
+                        dan temukan fokus, relaksasi, atau tidur nyenyak.
+                    </p>
+
+                    <!-- Deskripsi Fitur -->
+                    <div class="mb-4 text-start">
+                        <h5 class="text-white fw-semibold text-center mb-4">Fitur Utama</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box"
+                                    onclick="showFeatureDetail(this)"
+                                    data-title="Buat Soundscape Kustom"
+                                    data-description="Gabungkan berbagai suara alam seperti hujan, petir, ombak, dan api unggun. Atur volume setiap suara secara individual untuk menciptakan suasana yang sempurna untuk relaksasi atau fokus.">
+                                    <i class="bi bi-soundwave fs-4 text-danger"></i>
+                                    <span class="text-white-soft">Buat *Soundscape* Kustom</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box"
+                                    onclick="showFeatureDetail(this)"
+                                    data-title="Atur Suara Spasial 3D"
+                                    data-description="Gunakan teknologi Audio Spasial 3D kami untuk 'menempatkan' sumber suara di sekitar Anda. Geser slider X, Y, dan Z untuk merasakan suara datang dari kiri, kanan, atas, atau jauh, menciptakan pengalaman imersif (disarankan menggunakan headphone).">
+                                    <i class="bi bi-broadcast fs-4 text-danger"></i>
+                                    <span class="text-white-soft">Atur Suara Spasial 3D</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box"
+                                    onclick="showFeatureDetail(this)"
+                                    data-title="Upload Musik Pribadi"
+                                    data-description="Tidak hanya suara alam, Anda juga dapat mengunggah file musik pribadi (MP3, WAV) ke akun Anda. Gabungkan musik favorit Anda dengan suara hujan untuk sesi belajar yang lebih efektif.">
+                                    <i class="bi bi-music-note-list fs-4 text-danger"></i>
+                                    <span class="text-white-soft">Upload Musik Pribadi</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box"
+                                    onclick="showFeatureDetail(this)"
+                                    data-title="Simpan Preset Favorit"
+                                    data-description="Sudah menemukan kombinasi sempurna? Simpan pengaturan mixer Anda sebagai 'Preset'. Muat preset 'Fokus Belajar' atau 'Tidur Nyenyak' Anda kapan saja dengan satu kali klik. Semua tersimpan di akun Anda.">
+                                    <i class="bi bi-bookmark-star fs-4 text-danger"></i>
+                                    <span class="text-white-soft">Simpan Preset Favorit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Taskbar Baru -->
+        <div class="floating-taskbar glass-dark">
+            <button type="button" class="btn btn-glass-outline btn-icon" title="Toggle Mode" onclick="toggleTheme()">
+                <i class="bi bi-moon-stars" id="themeIcon"></i>
+            </button>
+            <button type="button" class="btn btn-glass-outline flex-grow-1" onclick="showRegister()">
+                <i class="bi bi-person-plus me-2"></i>Daftar
+            </button>
+            <button type="button" class="btn btn-glass flex-grow-1" onclick="showLogin()">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-container" style="display: none;">
+        <div class="auth-box glass">
+            <div class="auth-logo">
+                <i class="bi bi-wind text-white fs-1"></i>
+            </div>
+            <h2 class="text-center text-white fw-bold mb-2">Selamat Datang</h2>
+            <p class="text-center text-white-muted mb-4">Masuk ke SONORA untuk melanjutkan</p>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-3">
+                    <label class="form-label text-white-soft">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="nama@email.com" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-white-soft">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-glass w-100 mb-3">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                </button>
+                <div class="text-center">
+                    <span class="text-white-muted">Belum punya akun? </span>
+                    <a href="#" onclick="showRegister()" class="text-white fw-semibold text-decoration-none">Daftar
+                        Sekarang</a>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" onclick="showBeranda()" class="text-white-muted small text-decoration-none">
+                        <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="registerPage" class="auth-container" style="display: none;">
+        <div class="auth-box glass">
+            <div class="auth-logo">
+                <i class="bi bi-person-plus text-white fs-1"></i>
+            </div>
+            <h2 class="text-center text-white fw-bold mb-2">Buat Akun Baru</h2>
+            <p class="text-center text-white-muted mb-4">Bergabung dengan SONORA sekarang</p>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="mb-3">
+                    <label class="form-label text-white-soft">Nama Lengkap</label>
+                    <input type="text" class="form-control" id="registerName" placeholder="John Doe" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-white-soft">Email</label>
+                    <input type="email" class="form-control" id="registerEmail" placeholder="nama@email.com" required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-white-soft">Password</label>
+                    <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-glass w-100 mb-3">
+                    <i class="bi bi-check-circle me-2"></i>Daftar
+                </button>
+                <div class="text-center">
+                    <span class="text-white-muted">Sudah punya akun? </span>
+                    <a href="#" onclick="showLogin()" class="text-white fw-semibold text-decoration-none">Masuk</a>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#" onclick="showBeranda()" class="text-white-muted small text-decoration-none">
+                        <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" style="display: none;">
+        <div class="container py-4">
+
+            <!-- Header -->
+            <div class="sonora-header glass">
+                <div class="d-flex align-items-center justify-content-between flex-wrap">
+                    <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+                        <div class="sonora-logo">
+                            <i class="bi bi-wind text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="mb-0 text-white fw-bold">SONORA</h1>
+                            <p class="mb-0 text-white-muted small">Studio Suasana Relaksasi Spasial</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="user-badge">
+                            <i class="bi bi-person-circle text-white me-2"></i>
+                            <span class="text-white fw-semibold" id="userName">User</span>
+                        </div>
+                        <button class="btn btn-glass-outline" onclick="handleLogout()">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Music Upload Section -->
+            <div class="glass-dark rounded-4 p-4 mb-4">
+                <h5 class="text-white fw-semibold mb-3">
+                    <i class="bi bi-music-note-list me-2"></i>Musik Pribadi
+                </h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-9">
+                        <input type="file" class="form-control" id="musicFile" accept="audio/*">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-glass w-100" onclick="uploadMusic()">
+                            <i class="bi bi-upload me-2"></i>Upload
+                        </button>
+                    </div>
+                </div>
+                <div id="musicList" class="mt-3">
+                    <!-- Music items will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Sleep Timer -->
+            <div class="glass-dark rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                    <h5 class="text-white fw-semibold mb-0">
+                        <i class="bi bi-alarm me-2"></i>Sleep Timer
+                    </h5>
+                    <div class="timer-display" id="timerDisplay">00:00</div>
+                </div>
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-glass" onclick="setTimer(15)">15 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(30)">30 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(45)">45 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(60)">60 min</button>
+                    <button class="btn btn-danger" onclick="stopTimer()" id="stopTimerBtn" style="display:none;">
+                        <i class="bi bi-x-circle"></i> Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preset Management -->
+            <div class="glass-dark rounded-4 p-4 mb-4">
+                <h5 class="text-white fw-semibold mb-3">
+                    <i class="bi bi-bookmarks me-2"></i>Preset Soundscape
+                </h5>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" id="presetName"
+                            placeholder="Nama preset (e.g., Fokus Belajar)">
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-glass w-100" onclick="savePreset()">
+                            <i class="bi bi-save me-2"></i>Simpan
+                        </button>
+                    </div>
+                </div>
+                <div id="presetList" class="d-flex gap-2 flex-wrap"></div>
+            </div>
+
+            <!-- Sound Channels -->
+            <div class="row g-4 mb-4" id="soundChannels"></div>
+
+            <!-- Footer -->
+            <div class="text-center mt-5 text-white-muted">
+                <p class="mb-1">✨ Teknologi Rekayasa Multimedia - Politeknik Dewantara</p>
+                <p class="mb-1">Dikembangkan oleh Muhammad Zaky Zikra Nur (23404044)</p>
+                <p class="small">🎧 Gunakan headphone untuk pengalaman suara spasial 3D yang optimal</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Penjelasan Fitur (BARU) -->
+    <div class="modal fade" id="featureModal" tabindex="-1" aria-labelledby="modalFeatureTitleLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-glass"> <!-- Menggunakan style glass baru -->
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white fw-bold" id="modalFeatureTitleLabel">Judul Fitur</h5>
+                    <!-- Tombol 'x' (btn-close) dihilangkan sesuai permintaan -->
+                    <!-- <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body text-white-soft" id="modalFeatureDescription">
+                    Deskripsi detail fitur akan muncul di sini.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-glass-outline" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Daftar Video Background BARU -- DIHAPUS
+        /*
+        const backgroundVideos = [
+            'https://storage.googleapis.com/coverr-main/mp4/Wave-Of-Sea.mp4',
+            'https://storage.googleapis.com/coverr-main/mp4/High-Tree-Forest.mp4',
+            'https://storage.googleapis.com/coverr-main/mp4/Night-City-Traffic.mp4',
+            'https://storage.googleapis.com/coverr-main/mp4/Tropical_Beach.mp4'
+        ];
+        */
+
+        // Data Channels
+        const soundChannels = [
+            { id: 'rain', name: 'Hujan', icon: '🌧️', color: '#60A5FA' },
+            { id: 'thunder', name: 'Petir', icon: '⚡', color: '#A78BFA' },
+            { id: 'ocean', name: 'Ombak', icon: '🌊', color: '#06B6D4' },
+            { id: 'fire', name: 'Api Unggun', icon: '🔥', color: '#F59E0B' },
+            { id: 'wind', name: 'Angin', icon: '💨', color: '#34D399' },
+            { id: 'forest', name: 'Hutan', icon: '🌲', color: '#10B981' },
+            { id: 'night', name: 'Malam', icon: '🌙', color: '#818CF8' },
+            { id: 'cafe', name: 'Kafe', icon: '☕', color: '#FB923C' },
+        ];
+
+        // Global state
+        let currentUser = null;
+        let audioPlayers = {};
+        let userMusic = [];
+        let musicPlayers = {};
+        let timerInterval = null;
+        let timerSeconds = 0;
+        let presets = [];
+        let isLightMode = false; // Variabel baru untuk status tema
+        let featureModalInstance = null; // BARU: Global var untuk modal
+
+        // Auth Functions
+        function showBeranda() {
+            document.getElementById('berandaPage').style.display = 'block'; // Diubah ke block
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+        }
+
+        // FUNGSI BARU: Menampilkan Detail Fitur
+        function showFeatureDetail(element) {
+            const title = element.getAttribute('data-title');
+            const description = element.getAttribute('data-description');
+
+            document.getElementById('modalFeatureTitleLabel').textContent = title;
+            document.getElementById('modalFeatureDescription').innerHTML = description; // Pakai innerHTML jika deskripsi punya format
+
+            if (featureModalInstance) {
+                featureModalInstance.show();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('berandaPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('registerPage').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('berandaPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'flex';
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Simulate login - in real app, this would call backend API
+            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('sonoraCurrentUser', JSON.stringify(user));
+                loadUserData();
+                showMainApp();
+            } else {
+                alert('Email atau password salah!');
+            }
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+
+            if (users.find(u => u.email === email)) {
+                alert('Email sudah terdaftar!');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                music: [],
+                presets: []
+            };
+
+            users.push(newUser);
+            localStorage.setItem('sonoraUsers', JSON.stringify(users));
+
+            alert('Registrasi berhasil! Silakan login.');
+            showLogin();
+        }
+
+        function handleLogout() {
+            if (confirm('Yakin ingin keluar?')) {
+                stopAllSounds();
+                stopAllMusic();
+                localStorage.removeItem('sonoraCurrentUser');
+                currentUser = null;
+                document.getElementById('mainApp').style.display = 'none';
+                showBeranda(); // Diubah dari showLogin() ke showBeranda()
+            }
+        }
+
+        function showMainApp() {
+            document.getElementById('berandaPage').style.display = 'none'; // Ditambahkan
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser.name;
+            renderChannels();
+            renderMusicList();
+            renderPresets();
+        }
+
+        function loadUserData() {
+            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            const user = users.find(u => u.id === currentUser.id);
+            if (user) {
+                currentUser = user;
+                userMusic = user.music || [];
+                presets = user.presets || [];
+            }
+        }
+
+        function saveUserData() {
+            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            const index = users.findIndex(u => u.id === currentUser.id);
+            if (index !== -1) {
+                users[index] = currentUser;
+                localStorage.setItem('sonoraUsers', JSON.stringify(users));
+            }
+        }
+
+        // Music Upload Functions
+        function uploadMusic() {
+            const fileInput = document.getElementById('musicFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Pilih file musik terlebih dahulu!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const musicData = {
+                    id: Date.now(),
+                    name: file.name,
+                    data: e.target.result,
+                    type: file.type
+                };
+
+                userMusic.push(musicData);
+                currentUser.music = userMusic;
+                saveUserData();
+
+                renderMusicList();
+                fileInput.value = '';
+                alert('Musik berhasil diupload!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderMusicList() {
+            const container = document.getElementById('musicList');
+            if (userMusic.length === 0) {
+                container.innerHTML = '<p class="text-white-muted text-center small mb-0">Belum ada musik yang diupload</p>';
+                return;
+            }
+
+            container.innerHTML = userMusic.map(music => `
+                <div class="music-item d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn play-btn p-2" style="width: 40px; height: 40px;" 
+                                id="musicBtn-${music.id}" onclick="toggleMusic(${music.id})">
+                            <i class="bi bi-play-fill"></i>
+                        </button>
+                        <div>
+                            <p class="mb-0 text-white fw-semibold">${music.name}</p>
+                            <p class="mb-0 text-white-muted small">Musik Pribadi</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="range" class="form-range" style="width: 100px;" min="0" max="100" value="50"
+                               id="musicVolume-${music.id}" oninput="updateMusicVolume(${music.id}, this.value)">
+                        <button class="btn btn-danger btn-sm" onclick="deleteMusic(${music.id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function toggleMusic(musicId) {
+            await initTone();
+
+            const music = userMusic.find(m => m.id === musicId);
+            const btn = document.getElementById(`musicBtn-${musicId}`);
+
+            if (musicPlayers[musicId]) {
+                // Stop
+                musicPlayers[musicId].stop();
+                delete musicPlayers[musicId];
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+            } else {
+                // Play
+                const player = new Tone.Player({
+                    url: music.data,
+                    loop: true,
+                    volume: -10
+                }).toDestination();
+
+                await Tone.loaded();
+                player.start();
+
+                musicPlayers[musicId] = player;
+
+                // Apply volume
+                const volumeSlider = document.getElementById(`musicVolume-${musicId}`);
+                updateMusicVolume(musicId, volumeSlider.value);
+
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+            }
+        }
+
+        function updateMusicVolume(musicId, value) {
+            if (musicPlayers[musicId]) {
+                const dbValue = -40 + (value / 100 * 40);
+                musicPlayers[musicId].volume.value = dbValue;
+            }
+        }
+
+        function deleteMusic(musicId) {
+            if (confirm('Hapus musik ini?')) {
+                // Stop if playing
+                if (musicPlayers[musicId]) {
+                    musicPlayers[musicId].stop();
+                    delete musicPlayers[musicId];
+                }
+
+                userMusic = userMusic.filter(m => m.id !== musicId);
+                currentUser.music = userMusic;
+                saveUserData();
+                renderMusicList();
+            }
+        }
+
+        function stopAllMusic() {
+            Object.keys(musicPlayers).forEach(musicId => {
+                if (musicPlayers[musicId]) {
+                    musicPlayers[musicId].stop();
+                }
+            });
+            musicPlayers = {};
+        }
+
+        // Initialize Tone.js
+        async function initTone() {
+            if (Tone.context.state !== 'running') {
+                await Tone.start();
+                console.log('AudioContext started!');
+            }
+        }
+        
+        // Fungsi Baru: Toggle Theme
+        function toggleTheme() {
+            isLightMode = !isLightMode;
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (isLightMode) {
+                body.classList.add('light-mode');
+                themeIcon.classList.remove('bi-moon-stars');
+                themeIcon.classList.add('bi-sun');
+                localStorage.setItem('sonoraTheme', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                themeIcon.classList.remove('bi-sun');
+                themeIcon.classList.add('bi-moon-stars');
+                localStorage.setItem('sonoraTheme', 'dark');
+            }
+        }
+
+        // Create ambient sounds
+        function createAmbientSound(channelId) {
+            const panner = new Tone.Panner3D({
+                panningModel: 'HRTF',
+                positionX: 0,
+                positionY: 0,
+                positionZ: -1
+            }).toDestination();
+
+            const reverb = new Tone.Reverb({
+                decay: 5,
+                wet: 0.5
+            }).connect(panner);
+
+            const filter = new Tone.Filter({
+                frequency: 1000,
+                type: 'lowpass',
+                rolloff: -24
+            }).connect(reverb);
+
+            const volume = new Tone.Volume(-10).connect(filter);
+
+            let synth;
+
+            switch (channelId) {
+                case 'rain':
+                    synth = new Tone.Noise('pink').connect(volume);
+                    filter.frequency.value = 2000;
+                    reverb.decay = 3;
+                    break;
+                case 'thunder':
+                    synth = new Tone.Noise('brown').connect(volume);
+                    filter.frequency.value = 200;
+                    volume.volume.value = -15;
+                    const lfo = new Tone.LFO(0.1, -20, -5).connect(volume.volume);
+                    lfo.start();
+                    break;
+                case 'ocean':
+                    synth = new Tone.Noise('pink').connect(volume);
+                    filter.frequency.value = 800;
+                    const oceanLFO = new Tone.LFO(0.2, 500, 1200).connect(filter.frequency);
+                    oceanLFO.start();
+                    reverb.decay = 8;
+                    break;
+                case 'fire':
+                    synth = new Tone.Noise('brown').connect(volume);
+                    filter.frequency.value = 1500;
+                    const fireLFO = new Tone.LFO(4, 1000, 2000).connect(filter.frequency);
+                    fireLFO.start();
+                    break;
+                case 'wind':
+                    synth = new Tone.Noise('white').connect(volume);
+                    filter.frequency.value = 3000;
+                    const windLFO = new Tone.LFO(0.3, 2000, 4000).connect(filter.frequency);
+                    windLFO.start();
+                    reverb.decay = 6;
+                    break;
+                case 'forest':
+                    synth = new Tone.Noise('pink').connect(volume);
+                    filter.frequency.value = 5000;
+                    reverb.decay = 10;
+                    break;
+                case 'night':
+                    synth = new Tone.Noise('brown').connect(volume);
+                    filter.frequency.value = 400;
+                    volume.volume.value = -20;
+                    reverb.decay = 15;
+                    break;
+                case 'cafe':
+                    synth = new Tone.Noise('pink').connect(volume);
+                    filter.frequency.value = 2500;
+                    const cafeLFO = new Tone.LFO(0.5, 2000, 3000).connect(filter.frequency);
+                    cafeLFO.start();
+                    break;
+            }
+
+            synth.start();
+
+            return {
+                synth: synth,
+                volume: volume,
+                panner: panner,
+                filter: filter,
+                reverb: reverb
+            };
+        }
+
+        // Render sound channels
+        function renderChannels() {
+            const container = document.getElementById('soundChannels');
+            container.innerHTML = soundChannels.map(channel => `
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="card-channel glass-dark border-accent h-100" style="border-color: ${channel.color};">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <div class="channel-icon">${channel.icon}</div>
+                                <h6 class="mb-0 text-white fw-semibold">${channel.name}</h6>
+                            </div>
+                            <button class="play-btn" id="playBtn-${channel.id}" onclick="togglePlay('${channel.id}')">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label small text-white-soft mb-1">
+                                Volume <span class="float-end text-white" id="volumeLabel-${channel.id}">50%</span>
+                            </label>
+                            <input type="range" class="form-range" min="0" max="100" value="50" 
+                                id="volume-${channel.id}" oninput="updateVolume('${channel.id}', this.value)">
+                        </div>
+                        
+                        <div class="border-top border-secondary pt-3">
+                            <label class="form-label small text-white-soft fw-bold mb-2">Posisi Spasial 3D</label>
+                            
+                            <div class="mb-2">
+                                <label class="form-label small text-white-muted mb-1">
+                                    X <span class="float-end text-white" id="spatialX-${channel.id}">0.0</span>
+                                </label>
+                                <input type="range" class="form-range" min="-5" max="5" step="0.1" value="0"
+                                    id="x-${channel.id}" oninput="updateSpatial('${channel.id}', 'x', this.value)">
+                            </div>
+                            
+                            <div class="mb-2">
+                                <label class="form-label small text-white-muted mb-1">
+                                    Y <span class="float-end text-white" id="spatialY-${channel.id}">0.0</span>
+                                </label>
+                                <input type="range" class="form-range" min="-5" max="5" step="0.1" value="0"
+                                    id="y-${channel.id}" oninput="updateSpatial('${channel.id}', 'y', this.value)">
+                            </div>
+                            
+                            <div class="mb-0">
+                                <label class="form-label small text-white-muted mb-1">
+                                    Z <span class="float-end text-white" id="spatialZ-${channel.id}">-1.0</span>
+                                </label>
+                                <input type="range" class="form-range" min="-5" max="5" step="0.1" value="-1"
+                                    id="z-${channel.id}" oninput="updateSpatial('${channel.id}', 'z', this.value)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Toggle play/pause
+        async function togglePlay(channelId) {
+            await initTone();
+
+            const btn = document.getElementById(`playBtn-${channelId}`);
+
+            if (audioPlayers[channelId]) {
+                audioPlayers[channelId].synth.stop();
+                audioPlayers[channelId].synth.dispose();
+                audioPlayers[channelId].volume.dispose();
+                audioPlayers[channelId].panner.dispose();
+                audioPlayers[channelId].filter.dispose();
+                audioPlayers[channelId].reverb.dispose();
+                delete audioPlayers[channelId];
+
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+            } else {
+                audioPlayers[channelId] = createAmbientSound(channelId);
+
+                const volumeSlider = document.getElementById(`volume-${channelId}`);
+                updateVolume(channelId, volumeSlider.value);
+
+                updateSpatial(channelId, 'x', document.getElementById(`x-${channelId}`).value);
+                updateSpatial(channelId, 'y', document.getElementById(`y-${channelId}`).value);
+                updateSpatial(channelId, 'z', document.getElementById(`z-${channelId}`).value);
+
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+            }
+        }
+
+        function updateVolume(channelId, value) {
+            document.getElementById(`volumeLabel-${channelId}`).textContent = `${value}%`;
+
+            if (audioPlayers[channelId]) {
+                // Konversi nilai 0-100 ke desibel (dB)
+                // 0 -> -Infinity (mute), 100 -> 0 dB (full)
+                // Kita gunakan rentang -40dB hingga 0dB untuk kontrol yang lebih baik
+                const dbValue = -40 + (value / 100 * 40);
+                audioPlayers[channelId].volume.volume.value = dbValue;
+            }
+        }
+
+        function updateSpatial(channelId, axis, value) {
+            document.getElementById(`spatial${axis.toUpperCase()}-${channelId}`).textContent = parseFloat(value).toFixed(1);
+
+            if (audioPlayers[channelId]) {
+                const axisMap = { x: 'positionX', y: 'positionY', z: 'positionZ' };
+                audioPlayers[channelId].panner[axisMap[axis]].value = parseFloat(value);
+            }
+        }
+
+        function stopAllSounds() {
+            Object.keys(audioPlayers).forEach(channelId => {
+                const btn = document.getElementById(`playBtn-${channelId}`);
+                if (btn && btn.classList.contains('active')) {
+                    togglePlay(channelId);
+                }
+            });
+        }
+
+        // Timer functions
+        function setTimer(minutes) {
+            timerSeconds = minutes * 60;
+            document.getElementById('stopTimerBtn').style.display = 'inline-block';
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                    stopAllSounds();
+                    stopAllMusic();
+                    alert('Waktu habis! Semua suara telah dihentikan.');
+                }
+            }, 1000);
+
+            updateTimerDisplay();
+        }
+
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            timerSeconds = 0;
+            updateTimerDisplay();
+            document.getElementById('stopTimerBtn').style.display = 'none';
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            document.getElementById('timerDisplay').textContent =
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Preset functions
+        function savePreset() {
+            const name = document.getElementById('presetName').value.trim();
+            if (!name) {
+                alert('Masukkan nama preset!');
+                return;
+            }
+
+            const preset = {
+                name: name,
+                channels: {}
+            };
+
+            soundChannels.forEach(channel => {
+                const isPlaying = audioPlayers[channel.id] !== undefined;
+                preset.channels[channel.id] = {
+                    playing: isPlaying,
+                    volume: document.getElementById(`volume-${channel.id}`).value,
+                    x: document.getElementById(`x-${channel.id}`).value,
+                    y: document.getElementById(`y-${channel.id}`).value,
+                    z: document.getElementById(`z-${channel.id}`).value
+                };
+            });
+
+            presets.push(preset);
+            currentUser.presets = presets;
+            saveUserData();
+
+            document.getElementById('presetName').value = '';
+            renderPresets();
+            alert('Preset berhasil disimpan!');
+        }
+
+        function loadPreset(index) {
+            const preset = presets[index];
+
+            stopAllSounds();
+
+            setTimeout(() => {
+                soundChannels.forEach(channel => {
+                    const settings = preset.channels[channel.id];
+
+                    document.getElementById(`volume-${channel.id}`).value = settings.volume;
+                    document.getElementById(`x-${channel.id}`).value = settings.x;
+                    document.getElementById(`y-${channel.id}`).value = settings.y;
+                    document.getElementById(`z-${channel.id}`).value = settings.z;
+
+                    // Panggil fungsi update untuk label dan audio
+                    updateVolume(channel.id, settings.volume);
+                    updateSpatial(channel.id, 'x', settings.x);
+                    updateSpatial(channel.id, 'y', settings.y);
+                    updateSpatial(channel.id, 'z', settings.z);
+
+                    if (settings.playing) {
+                        // Perlu inisialisasi Tone sebelum play
+                        initTone().then(() => {
+                            togglePlay(channel.id);
+                        });
+                    }
+                });
+            }, 300); // Beri jeda agar stopAllSounds selesai
+        }
+
+        function deletePreset(index) {
+            if (confirm('Hapus preset ini?')) {
+                presets.splice(index, 1);
+                currentUser.presets = presets;
+                saveUserData();
+                renderPresets();
+            }
+        }
+
+        function renderPresets() {
+            const container = document.getElementById('presetList');
+            if (presets.length === 0) {
+                container.innerHTML = '<p class="text-white-muted text-center small mb-0">Belum ada preset tersimpan</p>';
+                return;
+            }
+
+            container.innerHTML = presets.map((preset, index) => `
+                <div class="preset-badge d-flex align-items-center gap-2">
+                    <i class="bi bi-music-note-beamed text-white"></i>
+                    <span class="text-white fw-semibold" onclick="loadPreset(${index})" style="cursor: pointer;">
+                        ${preset.name}
+                    </span>
+                    <button class="btn btn-sm btn-danger ms-2" onclick="deletePreset(${index})" style="padding: 0.15rem 0.4rem;">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Check if user is logged in
+        window.addEventListener('DOMContentLoaded', () => {
+            // BARU: Inisialisasi Modal Bootstrap
+            const featureModalEl = document.getElementById('featureModal');
+            if (featureModalEl) {
+                featureModalInstance = new bootstrap.Modal(featureModalEl);
+            }
+
+            // Cek tema yang tersimpan
+            const savedTheme = localStorage.getItem('sonoraTheme');
+            if (savedTheme === 'light') {
+                isLightMode = true;
+                document.body.classList.add('light-mode');
+                document.getElementById('themeIcon').classList.remove('bi-moon-stars');
+                document.getElementById('themeIcon').classList.add('bi-sun');
+            }
+
+            // Logika BARU: Set video background acak -- DIHAPUS
+            /*
+            try {
+                const videoEl = document.getElementById('video-bg');
+                const randomIndex = Math.floor(Math.random() * backgroundVideos.length);
+                videoEl.src = backgroundVideos[randomIndex];
+            } catch (err) {
+                console.warn("Gagal memuat video background:", err);
+            }
+            */
+
+            // Show loading screen with phases
+            const loadingScreen = document.getElementById('loadingScreen');
+
+            // Phase 1: Dark background (0-1s)
+            setTimeout(() => {
+                // Phase 2: Transition to blur (1-2.5s)
+                loadingScreen.classList.add('blur-phase');
+            }, 1000);
+
+            // Phase 3: Load complete, fade out (2.5-3.5s)
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+
+                // Phase 4: Remove from DOM after fade (3.5s)
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+
+                    // Show appropriate page
+                    const savedUser = localStorage.getItem('sonoraCurrentUser');
+                    if (savedUser) {
+                        currentUser = JSON.parse(savedUser);
+                        loadUserData();
+                        showMainApp();
+                    } else {
+                        showBeranda(); // Diubah dari showLogin()
+                    }
+                }, 1000);
+            }, 2500);
+
+            // Tambahkan event listener untuk initTone saat ada interaksi pengguna
+            document.body.addEventListener('click', initTone, { once: true });
+            document.body.addEventListener('keydown', initTone, { once: true });
+        });
+    </script>
+</body>
+
+</html>
