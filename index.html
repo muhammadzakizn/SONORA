@@ -23,11 +23,13 @@
             box-sizing: border-box;
         }
 
+        /* CRITICAL: Override semua yang bisa bikin blank screen */
         body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             min-height: 100vh;
             transition: all 0.3s ease;
+            background: #4d0000 !important; /* Fallback background jika gradient gagal */
         }
 
         /* Loading Screen - Netflix Style Animation */
@@ -881,30 +883,18 @@
 
 <body>
 
-    <!-- Loading Screen - Netflix Style -->
-    <div id="loadingScreen">
-        <!-- Netflix Lines -->
-        <div class="netflix-lines">
-            <!-- Horizontal Lines -->
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-            <!-- Vertical Lines -->
-            <div class="vertical-line"></div>
-            <div class="vertical-line"></div>
-            <div class="vertical-line"></div>
-            <!-- Radial Pulse -->
-            <div class="radial-pulse"></div>
-        </div>
-        
-        <!-- Logo -->
-        <div class="loading-content">
-            <div class="loading-logo">
-                <i class="bi bi-wind text-white" style="font-size: 4rem;"></i>
-            </div>
-        </div>
+    <!-- Loading Screen - WILL BE REMOVED IMMEDIATELY -->
+    <div id="loadingScreen" style="display: none !important;">
+        <!-- Disabled for Android compatibility -->
     </div>
+
+    <!-- Emergency Fallback - Shows if JavaScript fails -->
+    <noscript>
+        <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; z-index: 10000;">
+            <h1>JavaScript Required</h1>
+            <p>Please enable JavaScript in your WebView settings</p>
+        </div>
+    </noscript>
 
     <!-- Floating Particles -->
     <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
@@ -913,11 +903,11 @@
     <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
     <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
 
-    <!-- Halaman Beranda -->
-    <div id="berandaPage" style="display: block;">
+    <!-- Halaman Beranda - FORCE VISIBLE -->
+    <div id="berandaPage" style="display: block !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 1 !important;">
 
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" id="mainNavbar">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" id="mainNavbar" style="z-index: 1000 !important;">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="#">
                     <div class="sonora-logo" style="width: 45px; height: 45px; font-size: 1.7rem; border-radius: 12px;">
@@ -2159,69 +2149,104 @@
             `).join('');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 SONORA Loading...');
+        // AGGRESSIVE INITIALIZATION FOR ANDROID
+        (function() {
+            console.log('🔴 IMMEDIATE EXECUTION - Before DOMContentLoaded');
             
-            // CRITICAL FIX FOR ANDROID: Remove loading screen IMMEDIATELY
-            const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen) {
-                loadingScreen.remove();
-                console.log('✓ Loading screen removed');
-            }
-
-            // Initialize modal
-            const featureModalEl = document.getElementById('featureModal');
-            if (featureModalEl) {
-                featureModalInstance = new bootstrap.Modal(featureModalEl);
-                console.log('✓ Modal initialized');
-            }
-
-            // Load saved theme
-            const savedTheme = localStorage.getItem('sonoraTheme');
-            if (savedTheme === 'light') {
-                isLightMode = true;
-                document.body.classList.add('light-mode');
-                const themeIcon = document.getElementById('themeIcon');
-                if (themeIcon) {
-                    themeIcon.classList.remove('bi-moon-stars');
-                    themeIcon.classList.add('bi-sun');
+            // Try to show content ASAP
+            try {
+                const beranda = document.getElementById('berandaPage');
+                if (beranda) {
+                    beranda.style.display = 'block';
+                    beranda.style.visibility = 'visible';
+                    beranda.style.opacity = '1';
+                    console.log('✓ Beranda forced visible (immediate)');
                 }
-                console.log('✓ Light mode activated');
+            } catch (e) {
+                console.error('❌ Immediate show failed:', e);
             }
+        })();
 
-            // Check if user is logged in
-            const savedUser = localStorage.getItem('sonoraCurrentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    loadUserData();
-                    console.log('✓ User found, showing main app');
-                    
-                    // Hide beranda, show main app
-                    document.getElementById('berandaPage').style.display = 'none';
-                    document.getElementById('loginPage').style.display = 'none';
-                    document.getElementById('registerPage').style.display = 'none';
-                    showMainApp();
-                } catch (error) {
-                    console.error('❌ Error loading user:', error);
-                    // Stay on beranda (already visible)
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 DOMContentLoaded fired');
+            
+            try {
+                // Remove loading screen
+                const loadingScreen = document.getElementById('loadingScreen');
+                if (loadingScreen) {
+                    loadingScreen.remove();
+                    console.log('✓ Loading removed');
+                }
+
+                // Force show beranda again
+                const beranda = document.getElementById('berandaPage');
+                if (beranda) {
+                    beranda.style.display = 'block';
+                    beranda.style.visibility = 'visible';
+                    beranda.style.opacity = '1';
+                    console.log('✓ Beranda visible (DOMContentLoaded)');
+                }
+
+                // Initialize modal
+                const featureModalEl = document.getElementById('featureModal');
+                if (featureModalEl) {
+                    featureModalInstance = new bootstrap.Modal(featureModalEl);
+                }
+
+                // Theme
+                const savedTheme = localStorage.getItem('sonoraTheme');
+                if (savedTheme === 'light') {
+                    isLightMode = true;
+                    document.body.classList.add('light-mode');
+                    const themeIcon = document.getElementById('themeIcon');
+                    if (themeIcon) {
+                        themeIcon.classList.remove('bi-moon-stars');
+                        themeIcon.classList.add('bi-sun');
+                    }
+                }
+
+                // Check user
+                const savedUser = localStorage.getItem('sonoraCurrentUser');
+                if (savedUser) {
+                    try {
+                        currentUser = JSON.parse(savedUser);
+                        loadUserData();
+                        document.getElementById('berandaPage').style.display = 'none';
+                        showMainApp();
+                        console.log('✓ User logged in, showing main app');
+                    } catch (error) {
+                        console.error('❌ User load error:', error);
+                        // Keep beranda visible
+                    }
+                } else {
+                    console.log('✓ No user, beranda stays visible');
+                    // Hide other pages
                     document.getElementById('loginPage').style.display = 'none';
                     document.getElementById('registerPage').style.display = 'none';
                     document.getElementById('mainApp').style.display = 'none';
+                    
+                    // Navbar scroll listener
+                    window.addEventListener('scroll', handleNavbarScroll);
                 }
-            } else {
-                console.log('✓ No user, showing beranda');
-                // Beranda already visible by default
-                document.getElementById('loginPage').style.display = 'none';
-                document.getElementById('registerPage').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'none';
                 
-                // Setup scroll listener for navbar
-                window.addEventListener('scroll', handleNavbarScroll);
+                console.log('✅ INITIALIZATION COMPLETE');
+            } catch (error) {
+                console.error('❌ CRITICAL ERROR:', error);
+                alert('Error: ' + error.message);
             }
-            
-            console.log('✅ SONORA Ready!');
         });
+
+        // Fallback if DOMContentLoaded doesn't fire
+        setTimeout(() => {
+            console.log('⏰ Timeout fallback triggered');
+            const beranda = document.getElementById('berandaPage');
+            if (beranda) {
+                beranda.style.display = 'block';
+                beranda.style.visibility = 'visible';
+                beranda.style.opacity = '1';
+                console.log('✓ Beranda shown via timeout');
+            }
+        }, 1000);
     </script>
 </body>
 
