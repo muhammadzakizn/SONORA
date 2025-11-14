@@ -830,10 +830,10 @@
     <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
 
     <!-- Halaman Beranda -->
-    <div id="berandaPage" style="display: none; padding-top: 90px; padding-bottom: 120px;">
+    <div id="berandaPage" style="display: none;">
 
         <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent">
+        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" id="mainNavbar">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="#">
                     <div class="sonora-logo" style="width: 45px; height: 45px; font-size: 1.7rem; border-radius: 12px;">
@@ -845,7 +845,7 @@
         </nav>
 
         <!-- Konten Beranda -->
-        <div class="container">
+        <div class="container" style="padding-top: 90px; padding-bottom: 120px;">
             <div class="row align-items-center justify-content-center text-center text-white" style="min-height: 70vh;">
                 <div class="col-lg-9">
                     <h1 class="display-3 fw-bold mb-3" style="text-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);">
@@ -1158,6 +1158,56 @@
             document.getElementById('berandaPage').style.display = 'block';
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'none';
+            
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                const navbar = document.getElementById('mainNavbar');
+                if (navbar) {
+                    // Check initial scroll position
+                    handleNavbarScroll();
+                }
+                // Add scroll listener for navbar glass effect
+                window.addEventListener('scroll', handleNavbarScroll);
+            }, 100);
+        }
+        
+        // Handle navbar scroll effect dengan inline styles (Force!)
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('mainNavbar');
+            const scrollY = window.scrollY || window.pageYOffset;
+            
+            if (navbar) {
+                if (scrollY > 50) {
+                    // FROSTED GLASS EFFECT - Transparan tapi sangat blur!
+                    const isLight = document.body.classList.contains('light-mode');
+                    
+                    if (isLight) {
+                        navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.3)'; // Sangat transparan
+                        navbar.style.backdropFilter = 'blur(100px) saturate(300%) contrast(1.2)'; // Blur maksimal
+                        navbar.style.webkitBackdropFilter = 'blur(100px) saturate(300%) contrast(1.2)';
+                        navbar.style.boxShadow = '0 8px 32px rgba(31, 38, 135, 0.15)';
+                        navbar.style.borderBottom = '1px solid rgba(255, 255, 255, 0.5)';
+                    } else {
+                        navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.3)'; // Sangat transparan
+                        navbar.style.backdropFilter = 'blur(100px) saturate(300%) contrast(1.2)'; // Blur maksimal
+                        navbar.style.webkitBackdropFilter = 'blur(100px) saturate(300%) contrast(1.2)';
+                        navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)';
+                        navbar.style.borderBottom = '1px solid rgba(255, 255, 255, 0.2)';
+                    }
+                    
+                    navbar.classList.add('scrolled');
+                    console.log('✓ FROSTED GLASS - 100px blur, 30% opacity!');
+                } else {
+                    // Reset ke transparent
+                    navbar.style.backgroundColor = 'transparent';
+                    navbar.style.backdropFilter = 'none';
+                    navbar.style.webkitBackdropFilter = 'none';
+                    navbar.style.boxShadow = 'none';
+                    navbar.style.borderBottom = '1px solid transparent';
+                    
+                    navbar.classList.remove('scrolled');
+                }
+            }
         }
 
         function showFeatureDetail(element) {
@@ -1176,12 +1226,18 @@
             document.getElementById('berandaPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'flex';
             document.getElementById('registerPage').style.display = 'none';
+            
+            // Remove scroll listener when leaving beranda
+            window.removeEventListener('scroll', handleNavbarScroll);
         }
 
         function showRegister() {
             document.getElementById('berandaPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'flex';
+            
+            // Remove scroll listener when leaving beranda
+            window.removeEventListener('scroll', handleNavbarScroll);
         }
 
         function handleLogin(e) {
@@ -1238,6 +1294,10 @@
                 localStorage.removeItem('sonoraCurrentUser');
                 currentUser = null;
                 document.getElementById('mainApp').style.display = 'none';
+                
+                // Remove scroll listener when logging out
+                window.removeEventListener('scroll', handleNavbarScroll);
+                
                 showBeranda();
             }
         }
@@ -1248,6 +1308,10 @@
             document.getElementById('registerPage').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('userName').textContent = currentUser.name;
+            
+            // Remove scroll listener when entering main app
+            window.removeEventListener('scroll', handleNavbarScroll);
+            
             renderChannels();
             renderMusicList();
             renderPresets();
@@ -2030,31 +2094,24 @@
                 }
             }
 
-            // LIGHTWEIGHT LOADING ANIMATION (1.5 seconds)
+            // INSTANT LOAD - No Animation! (Fix for Android)
             const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.style.display = 'none'; // Langsung hide!
             
-            setTimeout(() => {
-                loadingScreen.classList.add('fade-out');
-                
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                    
-                    // Show appropriate page
-                    const savedUser = localStorage.getItem('sonoraCurrentUser');
-                    if (savedUser) {
-                        try {
-                            currentUser = JSON.parse(savedUser);
-                            loadUserData();
-                            showMainApp();
-                        } catch (error) {
-                            console.error('Error loading user:', error);
-                            showBeranda();
-                        }
-                    } else {
-                        showBeranda();
-                    }
-                }, 500); // Fade duration
-            }, 1500); // Show loading for 1.5 seconds
+            // Show appropriate page immediately
+            const savedUser = localStorage.getItem('sonoraCurrentUser');
+            if (savedUser) {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    loadUserData();
+                    showMainApp();
+                } catch (error) {
+                    console.error('Error loading user:', error);
+                    showBeranda();
+                }
+            } else {
+                showBeranda();
+            }
         });
     </script>
 </body>
