@@ -914,7 +914,7 @@
     <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
 
     <!-- Halaman Beranda -->
-    <div id="berandaPage" style="display: none;">
+    <div id="berandaPage" style="display: block;">
 
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" id="mainNavbar">
@@ -2160,16 +2160,20 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 SONORA Loading...');
+            
             // CRITICAL FIX FOR ANDROID: Remove loading screen IMMEDIATELY
             const loadingScreen = document.getElementById('loadingScreen');
             if (loadingScreen) {
-                loadingScreen.remove(); // Hapus dari DOM!
+                loadingScreen.remove();
+                console.log('✓ Loading screen removed');
             }
 
             // Initialize modal
             const featureModalEl = document.getElementById('featureModal');
             if (featureModalEl) {
                 featureModalInstance = new bootstrap.Modal(featureModalEl);
+                console.log('✓ Modal initialized');
             }
 
             // Load saved theme
@@ -2182,22 +2186,41 @@
                     themeIcon.classList.remove('bi-moon-stars');
                     themeIcon.classList.add('bi-sun');
                 }
+                console.log('✓ Light mode activated');
             }
 
-            // Show appropriate page IMMEDIATELY
+            // Check if user is logged in
             const savedUser = localStorage.getItem('sonoraCurrentUser');
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
                     loadUserData();
+                    console.log('✓ User found, showing main app');
+                    
+                    // Hide beranda, show main app
+                    document.getElementById('berandaPage').style.display = 'none';
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('registerPage').style.display = 'none';
                     showMainApp();
                 } catch (error) {
-                    console.error('Error loading user:', error);
-                    showBeranda();
+                    console.error('❌ Error loading user:', error);
+                    // Stay on beranda (already visible)
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('registerPage').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'none';
                 }
             } else {
-                showBeranda();
+                console.log('✓ No user, showing beranda');
+                // Beranda already visible by default
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('registerPage').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'none';
+                
+                // Setup scroll listener for navbar
+                window.addEventListener('scroll', handleNavbarScroll);
             }
+            
+            console.log('✅ SONORA Ready!');
         });
     </script>
 </body>
