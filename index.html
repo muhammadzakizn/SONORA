@@ -30,7 +30,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Loading Screen - Netflix Style */
+        /* Loading Screen - Netflix Style Animation */
         #loadingScreen {
             position: fixed;
             top: 0;
@@ -42,41 +42,19 @@
             align-items: center;
             justify-content: center;
             z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.5s ease;
+            animation: fadeOutLoading 2s ease 1s forwards; /* Auto hide after 1s */
+            pointer-events: none;
         }
 
-        #loadingScreen.fade-out {
-            opacity: 0;
-            pointer-events: none;
+        @keyframes fadeOutLoading {
+            0% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
         }
 
         .loading-content {
             text-align: center;
-            animation: fadeInScale 0.8s ease-out;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            position: relative;
+            z-index: 2;
         }
 
         .loading-logo {
@@ -87,60 +65,156 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 2rem;
-            box-shadow: 0 20px 60px rgba(139, 0, 0, 0.6);
-            animation: logoPulse 2s ease-in-out infinite;
+            margin: 0 auto;
+            animation: logoZoomIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        @keyframes logoPulse {
-            0%, 100% {
+        @keyframes logoZoomIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
                 transform: scale(1);
-                box-shadow: 0 20px 60px rgba(139, 0, 0, 0.6);
+                opacity: 1;
+            }
+        }
+
+        /* Netflix Lines Animation */
+        .netflix-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, #dc143c, transparent);
+            height: 2px;
+            width: 100%;
+            animation: lineMove 1.5s ease-in-out;
+        }
+
+        .line:nth-child(1) {
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .line:nth-child(2) {
+            top: 40%;
+            animation-delay: 0.1s;
+        }
+
+        .line:nth-child(3) {
+            top: 60%;
+            animation-delay: 0.2s;
+        }
+
+        .line:nth-child(4) {
+            top: 80%;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes lineMove {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
             }
             50% {
-                transform: scale(1.05);
-                box-shadow: 0 25px 80px rgba(220, 20, 60, 0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
             }
         }
 
-        .loading-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
-            text-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);
-            animation: fadeIn 0.8s ease 0.3s backwards;
+        /* Vertical Lines */
+        .vertical-line {
+            position: absolute;
+            background: linear-gradient(180deg, transparent, #8b0000, transparent);
+            width: 2px;
+            height: 100%;
+            animation: verticalLineMove 1.5s ease-in-out;
         }
 
-        .loading-subtitle {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease 0.5s backwards;
+        .vertical-line:nth-child(5) {
+            left: 20%;
+            animation-delay: 0.15s;
         }
 
-        /* Simple spinner - lightweight */
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            margin: 2rem auto;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #dc143c;
+        .vertical-line:nth-child(6) {
+            left: 50%;
+            animation-delay: 0.25s;
+        }
+
+        .vertical-line:nth-child(7) {
+            left: 80%;
+            animation-delay: 0.35s;
+        }
+
+        @keyframes verticalLineMove {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Radial Pulse */
+        .radial-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            border: 2px solid #dc143c;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            opacity: 0;
+            animation: radialExpand 1.5s ease-out 0.3s;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes radialExpand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 600px;
+                height: 600px;
+                opacity: 0;
+            }
         }
 
-        .loading-text {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            animation: fadeIn 0.8s ease 0.7s backwards;
+        /* Logo icon animation */
+        .loading-logo i {
+            animation: iconSpin 1s ease 0.5s backwards;
+        }
+
+        @keyframes iconSpin {
+            0% {
+                transform: rotate(-180deg) scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 1;
+            }
         }
 
         /* Animated Background */
@@ -807,18 +881,28 @@
 
 <body>
 
-    <!-- Loading Screen -->
+    <!-- Loading Screen - Netflix Style -->
     <div id="loadingScreen">
+        <!-- Netflix Lines -->
+        <div class="netflix-lines">
+            <!-- Horizontal Lines -->
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <!-- Vertical Lines -->
+            <div class="vertical-line"></div>
+            <div class="vertical-line"></div>
+            <div class="vertical-line"></div>
+            <!-- Radial Pulse -->
+            <div class="radial-pulse"></div>
+        </div>
+        
+        <!-- Logo -->
         <div class="loading-content">
             <div class="loading-logo">
                 <i class="bi bi-wind text-white" style="font-size: 4rem;"></i>
             </div>
-            <h1 class="loading-title">SONORA</h1>
-            <p class="loading-subtitle">Studio Suasana Relaksasi Spasial</p>
-            
-            <div class="loading-spinner"></div>
-            
-            <p class="loading-text">Memuat aplikasi...</p>
         </div>
     </div>
 
@@ -2076,6 +2160,12 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // CRITICAL FIX FOR ANDROID: Remove loading screen IMMEDIATELY
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen) {
+                loadingScreen.remove(); // Hapus dari DOM!
+            }
+
             // Initialize modal
             const featureModalEl = document.getElementById('featureModal');
             if (featureModalEl) {
@@ -2094,11 +2184,7 @@
                 }
             }
 
-            // INSTANT LOAD - No Animation! (Fix for Android)
-            const loadingScreen = document.getElementById('loadingScreen');
-            loadingScreen.style.display = 'none'; // Langsung hide!
-            
-            // Show appropriate page immediately
+            // Show appropriate page IMMEDIATELY
             const savedUser = localStorage.getItem('sonoraCurrentUser');
             if (savedUser) {
                 try {
