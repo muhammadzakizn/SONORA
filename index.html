@@ -738,13 +738,10 @@
                 <h5 class="text-white fw-semibold mb-3">
                     <i class="bi bi-music-note-list me-2"></i>Musik Pribadi
                 </h5>
-                <div class="alert alert-info mb-3" style="background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); color: white;">
-                    <i class="bi bi-info-circle me-2"></i>
-                    <small>
-                        <strong>Android WebView:</strong> File upload mungkin tidak berfungsi. 
-                        Gunakan musik demo atau minta developer aktifkan file chooser di WebView.
-                    </small>
-                </div>
+                <p class="text-white-muted small mb-3">
+                    <i class="bi bi-lightbulb me-1"></i>
+                    Upload file musik dari device Anda, atau gunakan musik demo yang sudah tersedia.
+                </p>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <input type="file" class="form-control" id="musicFile" accept="audio/*">
@@ -755,7 +752,7 @@
                         </button>
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-glass-outline w-100" onclick="addDemoMusic()">
+                        <button class="btn btn-glass-outline w-100" onclick="showDemoMusicMenu()">
                             <i class="bi bi-music-note-beamed me-2"></i>Demo
                         </button>
                     </div>
@@ -1023,7 +1020,7 @@
             const file = fileInput.files[0];
 
             if (!file) {
-                alert('Pilih file musik terlebih dahulu!\n\nJika tombol "Choose File" tidak berfungsi di Android, coba gunakan tombol "Demo" untuk menambahkan musik contoh.');
+                alert('📂 Pilih file musik terlebih dahulu!');
                 return;
             }
 
@@ -1031,26 +1028,23 @@
 
             // Cek ukuran file (max 10MB)
             if (file.size > 10 * 1024 * 1024) {
-                alert('File terlalu besar! Maksimal 10MB.');
+                alert('❌ File terlalu besar! Maksimal 10MB.');
                 return;
             }
 
+            // Show loading feedback
+            const uploadBtn = event.target;
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Uploading...';
+            uploadBtn.disabled = true;
+
             const reader = new FileReader();
-            
-            reader.onloadstart = function() {
-                console.log('Reading file started...');
-            };
-            
-            reader.onprogress = function(e) {
-                if (e.lengthComputable) {
-                    const percent = Math.round((e.loaded / e.total) * 100);
-                    console.log('Reading progress:', percent + '%');
-                }
-            };
             
             reader.onerror = function(error) {
                 console.error('FileReader error:', error);
-                alert('Gagal membaca file: ' + error);
+                alert('❌ Gagal membaca file. Silakan coba lagi.');
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
             };
             
             reader.onload = function (e) {
@@ -1061,7 +1055,8 @@
                         id: Date.now(),
                         name: file.name,
                         data: e.target.result,
-                        type: file.type
+                        type: file.type,
+                        isDemo: false
                     };
 
                     userMusic.push(musicData);
@@ -1070,27 +1065,55 @@
 
                     renderMusicList();
                     fileInput.value = '';
-                    alert('Musik berhasil diupload: ' + file.name);
+                    alert('✅ Musik berhasil diupload!\n\n🎵 ' + file.name);
                     console.log('Music saved successfully');
                 } catch (error) {
                     console.error('Upload error:', error);
-                    alert('Gagal menyimpan musik: ' + error.message);
+                    alert('❌ Gagal menyimpan musik: ' + error.message);
+                } finally {
+                    uploadBtn.innerHTML = originalText;
+                    uploadBtn.disabled = false;
                 }
             };
             
             reader.readAsDataURL(file);
         }
 
-        function addDemoMusic() {
-            // Tambahkan musik demo menggunakan Web Audio API
-            console.log('Adding demo music...');
+        function showDemoMusicMenu() {
+            const demoOptions = [
+                { name: '🎹 Relaxing Piano', type: 'piano' },
+                { name: '🎸 Ambient Guitar', type: 'guitar' },
+                { name: '🎵 Meditation Chimes', type: 'chimes' },
+                { name: '🎻 Peaceful Strings', type: 'strings' },
+                { name: '🎼 Lo-fi Beats', type: 'lofi' }
+            ];
+            
+            let message = '🎵 Pilih Musik Demo:\n\n';
+            demoOptions.forEach((option, index) => {
+                message += `${index + 1}. ${option.name}\n`;
+            });
+            message += '\nMasukkan nomor (1-5):';
+            
+            const choice = prompt(message);
+            const index = parseInt(choice) - 1;
+            
+            if (index >= 0 && index < demoOptions.length) {
+                addDemoMusic(demoOptions[index].name, demoOptions[index].type);
+            } else if (choice !== null) {
+                alert('❌ Pilihan tidak valid. Pilih nomor 1-5.');
+            }
+        }
+
+        function addDemoMusic(name, type) {
+            console.log('Adding demo music:', name, type);
             
             const demoMusic = {
                 id: Date.now(),
-                name: '🎵 Musik Demo - Relaxing Tone',
-                data: null, // Akan di-generate dengan Web Audio API
+                name: name || '🎵 Musik Demo - Relaxing Tone',
+                data: null,
                 type: 'demo',
-                isDemo: true
+                isDemo: true,
+                demoType: type || 'default'
             };
 
             userMusic.push(demoMusic);
@@ -1098,7 +1121,7 @@
             saveUserData();
             renderMusicList();
             
-            alert('✓ Musik demo ditambahkan!\n\nKlik tombol Play untuk mendengarkan musik relaksasi yang di-generate dengan Web Audio API.');
+            alert('✅ Musik demo ditambahkan!\n\n' + demoMusic.name + '\n\n▶️ Klik tombol Play untuk mendengarkan.');
         }
 
         function renderMusicList() {
@@ -1141,7 +1164,6 @@
 
             if (musicPlayers[musicId]) {
                 if (music.isDemo) {
-                    // Stop demo music (Web Audio API)
                     const player = musicPlayers[musicId];
                     if (player.oscillators) {
                         player.oscillators.forEach(osc => osc.stop());
@@ -1150,7 +1172,6 @@
                         player.gainNode.disconnect();
                     }
                 } else {
-                    // Stop regular music
                     musicPlayers[musicId].pause();
                     musicPlayers[musicId].currentTime = 0;
                 }
@@ -1159,8 +1180,7 @@
                 btn.innerHTML = '<i class="bi bi-play-fill"></i>';
             } else {
                 if (music.isDemo) {
-                    // Play demo music using Web Audio API
-                    console.log('Playing demo music with Web Audio API');
+                    console.log('Playing demo music:', music.demoType);
                     
                     const ctx = initAudioContext();
                     const gainNode = ctx.createGain();
@@ -1169,22 +1189,49 @@
                     
                     const oscillators = [];
                     
-                    // Create relaxing chord (C major 7th)
-                    const frequencies = [261.63, 329.63, 392.00, 493.88]; // C, E, G, B
+                    // Different sounds based on type
+                    let frequencies = [];
+                    let waveType = 'sine';
+                    
+                    switch(music.demoType) {
+                        case 'piano':
+                            frequencies = [261.63, 329.63, 392.00, 493.88]; // C Major 7th
+                            waveType = 'triangle';
+                            break;
+                        case 'guitar':
+                            frequencies = [196.00, 246.94, 293.66, 369.99]; // G Major 7th
+                            waveType = 'sawtooth';
+                            break;
+                        case 'chimes':
+                            frequencies = [523.25, 659.25, 783.99, 987.77]; // High C Major 7th
+                            waveType = 'sine';
+                            break;
+                        case 'strings':
+                            frequencies = [220.00, 277.18, 329.63, 440.00]; // A Major 7th
+                            waveType = 'sawtooth';
+                            break;
+                        case 'lofi':
+                            frequencies = [146.83, 185.00, 220.00, 293.66]; // D Major 7th
+                            waveType = 'square';
+                            break;
+                        default:
+                            frequencies = [261.63, 329.63, 392.00, 493.88];
+                            waveType = 'sine';
+                    }
                     
                     frequencies.forEach((freq, index) => {
                         const osc = ctx.createOscillator();
-                        osc.type = 'sine';
+                        osc.type = waveType;
                         osc.frequency.value = freq;
                         
                         const oscGain = ctx.createGain();
                         oscGain.gain.value = 0.15;
                         
-                        // Add slight detuning for richness
+                        // Add LFO for movement
                         const lfo = ctx.createOscillator();
-                        lfo.frequency.value = 0.5 + (index * 0.1);
+                        lfo.frequency.value = 0.3 + (index * 0.1);
                         const lfoGain = ctx.createGain();
-                        lfoGain.gain.value = 2;
+                        lfoGain.gain.value = 1.5;
                         lfo.connect(lfoGain);
                         lfoGain.connect(osc.frequency);
                         
@@ -1200,14 +1247,13 @@
                     musicPlayers[musicId] = { oscillators, gainNode, ctx };
                     
                 } else {
-                    // Play regular uploaded music
                     const audio = new Audio(music.data);
                     audio.loop = true;
                     audio.volume = 0.5;
                     
                     audio.play().catch(error => {
                         console.error('Error playing music:', error);
-                        alert('Gagal memutar musik: ' + error.message);
+                        alert('❌ Gagal memutar musik: ' + error.message);
                         return;
                     });
 
