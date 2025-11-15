@@ -656,6 +656,9 @@
                 <button type="submit" class="btn btn-glass w-100 mb-3">
                     <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
                 </button>
+                <button type="button" class="btn btn-glass-outline w-100 mb-3" onclick="testLogin()">
+                    <i class="bi bi-bug me-2"></i>Test Login (Demo)
+                </button>
                 <div class="text-center">
                     <span class="text-white-muted">Belum punya akun? </span>
                     <a href="#" onclick="showRegister()" class="text-white fw-semibold text-decoration-none">Daftar Sekarang</a>
@@ -735,13 +738,25 @@
                 <h5 class="text-white fw-semibold mb-3">
                     <i class="bi bi-music-note-list me-2"></i>Musik Pribadi
                 </h5>
+                <div class="alert alert-info mb-3" style="background: rgba(96, 165, 250, 0.2); border: 1px solid rgba(96, 165, 250, 0.4); color: white;">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <small>
+                        <strong>Android WebView:</strong> File upload mungkin tidak berfungsi. 
+                        Gunakan musik demo atau minta developer aktifkan file chooser di WebView.
+                    </small>
+                </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         <input type="file" class="form-control" id="musicFile" accept="audio/*">
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-glass w-100" onclick="uploadMusic()">
                             <i class="bi bi-upload me-2"></i>Upload
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-glass-outline w-100" onclick="addDemoMusic()">
+                            <i class="bi bi-music-note-beamed me-2"></i>Demo
                         </button>
                     </div>
                 </div>
@@ -834,6 +849,36 @@
             document.getElementById('mainApp').style.display = 'none';
         }
 
+        function testLogin() {
+            // Buat user demo jika belum ada
+            try {
+                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+                const demoUser = users.find(u => u.email === 'demo@sonora.com');
+                
+                if (!demoUser) {
+                    const newDemoUser = {
+                        id: Date.now(),
+                        name: 'Demo User',
+                        email: 'demo@sonora.com',
+                        password: 'demo123',
+                        music: [],
+                        presets: []
+                    };
+                    users.push(newDemoUser);
+                    localStorage.setItem('sonoraUsers', JSON.stringify(users));
+                    console.log('Demo user created');
+                }
+                
+                // Auto login sebagai demo user
+                document.getElementById('loginEmail').value = 'demo@sonora.com';
+                document.getElementById('loginPassword').value = 'demo123';
+                alert('Demo account loaded!\nEmail: demo@sonora.com\nPassword: demo123\n\nKlik "Masuk" untuk login.');
+            } catch (error) {
+                console.error('Test login error:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+
         function showLogin() {
             document.getElementById('berandaPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'flex';
@@ -851,16 +896,27 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+            console.log('Login attempt:', email); // Debug log
 
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('sonoraCurrentUser', JSON.stringify(user));
-                loadUserData();
-                showMainApp();
-            } else {
-                alert('Email atau password salah!');
+            try {
+                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+                console.log('Users found:', users.length); // Debug log
+                
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('sonoraCurrentUser', JSON.stringify(user));
+                    console.log('Login successful'); // Debug log
+                    loadUserData();
+                    showMainApp();
+                } else {
+                    console.log('User not found'); // Debug log
+                    alert('Email atau password salah! Silakan daftar terlebih dahulu jika belum memiliki akun.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Terjadi kesalahan saat login: ' + error.message);
             }
         }
 
@@ -870,27 +926,39 @@
             const email = document.getElementById('registerEmail').value;
             const password = document.getElementById('registerPassword').value;
 
-            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            console.log('Register attempt:', email); // Debug log
 
-            if (users.find(u => u.email === email)) {
-                alert('Email sudah terdaftar!');
-                return;
+            try {
+                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+                console.log('Current users:', users.length); // Debug log
+
+                if (users.find(u => u.email === email)) {
+                    alert('Email sudah terdaftar! Silakan login.');
+                    return;
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    password: password,
+                    music: [],
+                    presets: []
+                };
+
+                users.push(newUser);
+                localStorage.setItem('sonoraUsers', JSON.stringify(users));
+                console.log('User registered successfully'); // Debug log
+
+                alert('Registrasi berhasil! Silakan login.');
+                showLogin();
+                
+                // Auto-fill email di login form
+                document.getElementById('loginEmail').value = email;
+            } catch (error) {
+                console.error('Register error:', error);
+                alert('Terjadi kesalahan saat registrasi: ' + error.message);
             }
-
-            const newUser = {
-                id: Date.now(),
-                name: name,
-                email: email,
-                password: password,
-                music: [],
-                presets: []
-            };
-
-            users.push(newUser);
-            localStorage.setItem('sonoraUsers', JSON.stringify(users));
-
-            alert('Registrasi berhasil! Silakan login.');
-            showLogin();
         }
 
         function handleLogout() {
@@ -955,28 +1023,82 @@
             const file = fileInput.files[0];
 
             if (!file) {
-                alert('Pilih file musik terlebih dahulu!');
+                alert('Pilih file musik terlebih dahulu!\n\nJika tombol "Choose File" tidak berfungsi di Android, coba gunakan tombol "Demo" untuk menambahkan musik contoh.');
+                return;
+            }
+
+            console.log('Uploading file:', file.name, file.type, file.size);
+
+            // Cek ukuran file (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File terlalu besar! Maksimal 10MB.');
                 return;
             }
 
             const reader = new FileReader();
-            reader.onload = function (e) {
-                const musicData = {
-                    id: Date.now(),
-                    name: file.name,
-                    data: e.target.result,
-                    type: file.type
-                };
-
-                userMusic.push(musicData);
-                currentUser.music = userMusic;
-                saveUserData();
-
-                renderMusicList();
-                fileInput.value = '';
-                alert('Musik berhasil diupload!');
+            
+            reader.onloadstart = function() {
+                console.log('Reading file started...');
             };
+            
+            reader.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    const percent = Math.round((e.loaded / e.total) * 100);
+                    console.log('Reading progress:', percent + '%');
+                }
+            };
+            
+            reader.onerror = function(error) {
+                console.error('FileReader error:', error);
+                alert('Gagal membaca file: ' + error);
+            };
+            
+            reader.onload = function (e) {
+                try {
+                    console.log('File read successful, size:', e.target.result.length);
+                    
+                    const musicData = {
+                        id: Date.now(),
+                        name: file.name,
+                        data: e.target.result,
+                        type: file.type
+                    };
+
+                    userMusic.push(musicData);
+                    currentUser.music = userMusic;
+                    saveUserData();
+
+                    renderMusicList();
+                    fileInput.value = '';
+                    alert('Musik berhasil diupload: ' + file.name);
+                    console.log('Music saved successfully');
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Gagal menyimpan musik: ' + error.message);
+                }
+            };
+            
             reader.readAsDataURL(file);
+        }
+
+        function addDemoMusic() {
+            // Tambahkan musik demo menggunakan Web Audio API
+            console.log('Adding demo music...');
+            
+            const demoMusic = {
+                id: Date.now(),
+                name: '🎵 Musik Demo - Relaxing Tone',
+                data: null, // Akan di-generate dengan Web Audio API
+                type: 'demo',
+                isDemo: true
+            };
+
+            userMusic.push(demoMusic);
+            currentUser.music = userMusic;
+            saveUserData();
+            renderMusicList();
+            
+            alert('✓ Musik demo ditambahkan!\n\nKlik tombol Play untuk mendengarkan musik relaksasi yang di-generate dengan Web Audio API.');
         }
 
         function renderMusicList() {
@@ -995,7 +1117,11 @@
                         </button>
                         <div>
                             <p class="mb-0 text-white fw-semibold">${music.name}</p>
-                            <p class="mb-0 text-white-muted small">Musik Pribadi</p>
+                            <p class="mb-0 text-white-muted small">
+                                ${music.isDemo ? 
+                                    '<span class="badge" style="background: rgba(96, 165, 250, 0.3); color: #60A5FA;">Web Audio API</span>' : 
+                                    'Musik Pribadi'}
+                            </p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
@@ -1014,24 +1140,84 @@
             const btn = document.getElementById(`musicBtn-${musicId}`);
 
             if (musicPlayers[musicId]) {
-                musicPlayers[musicId].pause();
-                musicPlayers[musicId].currentTime = 0;
+                if (music.isDemo) {
+                    // Stop demo music (Web Audio API)
+                    const player = musicPlayers[musicId];
+                    if (player.oscillators) {
+                        player.oscillators.forEach(osc => osc.stop());
+                    }
+                    if (player.gainNode) {
+                        player.gainNode.disconnect();
+                    }
+                } else {
+                    // Stop regular music
+                    musicPlayers[musicId].pause();
+                    musicPlayers[musicId].currentTime = 0;
+                }
                 delete musicPlayers[musicId];
                 btn.classList.remove('active');
                 btn.innerHTML = '<i class="bi bi-play-fill"></i>';
             } else {
-                const audio = new Audio(music.data);
-                audio.loop = true;
-                audio.volume = 0.5;
-                
-                audio.play().catch(error => {
-                    console.error('Error playing music:', error);
-                    alert('Gagal memutar musik.');
-                });
+                if (music.isDemo) {
+                    // Play demo music using Web Audio API
+                    console.log('Playing demo music with Web Audio API');
+                    
+                    const ctx = initAudioContext();
+                    const gainNode = ctx.createGain();
+                    gainNode.gain.value = 0.3;
+                    gainNode.connect(ctx.destination);
+                    
+                    const oscillators = [];
+                    
+                    // Create relaxing chord (C major 7th)
+                    const frequencies = [261.63, 329.63, 392.00, 493.88]; // C, E, G, B
+                    
+                    frequencies.forEach((freq, index) => {
+                        const osc = ctx.createOscillator();
+                        osc.type = 'sine';
+                        osc.frequency.value = freq;
+                        
+                        const oscGain = ctx.createGain();
+                        oscGain.gain.value = 0.15;
+                        
+                        // Add slight detuning for richness
+                        const lfo = ctx.createOscillator();
+                        lfo.frequency.value = 0.5 + (index * 0.1);
+                        const lfoGain = ctx.createGain();
+                        lfoGain.gain.value = 2;
+                        lfo.connect(lfoGain);
+                        lfoGain.connect(osc.frequency);
+                        
+                        osc.connect(oscGain);
+                        oscGain.connect(gainNode);
+                        osc.start();
+                        lfo.start();
+                        
+                        oscillators.push(osc);
+                        oscillators.push(lfo);
+                    });
+                    
+                    musicPlayers[musicId] = { oscillators, gainNode, ctx };
+                    
+                } else {
+                    // Play regular uploaded music
+                    const audio = new Audio(music.data);
+                    audio.loop = true;
+                    audio.volume = 0.5;
+                    
+                    audio.play().catch(error => {
+                        console.error('Error playing music:', error);
+                        alert('Gagal memutar musik: ' + error.message);
+                        return;
+                    });
 
-                musicPlayers[musicId] = audio;
+                    musicPlayers[musicId] = audio;
+                }
+                
                 const volumeSlider = document.getElementById(`musicVolume-${musicId}`);
-                updateMusicVolume(musicId, volumeSlider.value);
+                if (volumeSlider) {
+                    updateMusicVolume(musicId, volumeSlider.value);
+                }
 
                 btn.classList.add('active');
                 btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
@@ -1039,17 +1225,42 @@
         }
 
         function updateMusicVolume(musicId, value) {
+            const music = userMusic.find(m => m.id === musicId);
             if (musicPlayers[musicId]) {
-                musicPlayers[musicId].volume = value / 100;
+                const volume = value / 100;
+                if (music && music.isDemo) {
+                    // Demo music (Web Audio API)
+                    if (musicPlayers[musicId].gainNode) {
+                        musicPlayers[musicId].gainNode.gain.value = volume * 0.3;
+                    }
+                } else {
+                    // Regular music (HTML5 Audio)
+                    musicPlayers[musicId].volume = volume;
+                }
             }
         }
 
         function deleteMusic(musicId) {
             if (confirm('Hapus musik ini?')) {
+                const music = userMusic.find(m => m.id === musicId);
+                
                 if (musicPlayers[musicId]) {
-                    musicPlayers[musicId].pause();
+                    if (music && music.isDemo) {
+                        // Stop demo music
+                        const player = musicPlayers[musicId];
+                        if (player.oscillators) {
+                            player.oscillators.forEach(osc => osc.stop());
+                        }
+                        if (player.gainNode) {
+                            player.gainNode.disconnect();
+                        }
+                    } else {
+                        // Stop regular music
+                        musicPlayers[musicId].pause();
+                    }
                     delete musicPlayers[musicId];
                 }
+                
                 userMusic = userMusic.filter(m => m.id !== musicId);
                 currentUser.music = userMusic;
                 saveUserData();
@@ -1059,8 +1270,25 @@
 
         function stopAllMusic() {
             Object.keys(musicPlayers).forEach(musicId => {
+                const music = userMusic.find(m => m.id == musicId);
                 if (musicPlayers[musicId]) {
-                    musicPlayers[musicId].pause();
+                    if (music && music.isDemo) {
+                        // Stop demo music
+                        const player = musicPlayers[musicId];
+                        if (player.oscillators) {
+                            player.oscillators.forEach(osc => {
+                                try { osc.stop(); } catch(e) {}
+                            });
+                        }
+                        if (player.gainNode) {
+                            try { player.gainNode.disconnect(); } catch(e) {}
+                        }
+                    } else {
+                        // Stop regular music
+                        try {
+                            musicPlayers[musicId].pause();
+                        } catch(e) {}
+                    }
                 }
             });
             musicPlayers = {};
@@ -1328,13 +1556,32 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('App loaded'); // Debug log
+            
+            // Test localStorage
+            try {
+                localStorage.setItem('test', 'works');
+                const test = localStorage.getItem('test');
+                console.log('localStorage test:', test);
+                localStorage.removeItem('test');
+            } catch (error) {
+                console.error('localStorage not available:', error);
+                alert('PERINGATAN: Penyimpanan data tidak tersedia. Pastikan WebView mengaktifkan localStorage!');
+            }
+            
             const savedUser = localStorage.getItem('sonoraCurrentUser');
             if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                loadUserData();
-                showMainApp();
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    console.log('User auto-login:', currentUser.email);
+                    loadUserData();
+                    showMainApp();
+                } catch (error) {
+                    console.error('Auto-login error:', error);
+                    showLogin();
+                }
             } else {
-                // Tampilkan login page sebagai default
+                console.log('No saved user, showing login');
                 showLogin();
             }
         });
