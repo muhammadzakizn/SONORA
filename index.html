@@ -26,7 +26,7 @@
             overflow-x: hidden;
             min-height: 100vh;
             transition: all 0.3s ease;
-            background: #4d0000 !important;
+            background: #000000 !important; /* Pure Black */
         }
 
         body::before {
@@ -36,13 +36,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #4d0000 0%, #8b0000 50%, #3a0000 100%);
+            background: #000000; /* Pure Black */
             z-index: -2;
             transition: background 0.5s ease;
         }
 
         body.light-mode::before {
-            background: linear-gradient(135deg, #DC143C 0%, #FFB6C1 30%, #FFF0F5 60%, #FFE4E1 100%);
+            background: #FFFFFF; /* Pure White */
         }
 
         body::after {
@@ -53,11 +53,8 @@
             width: 100%;
             height: 100%;
             background:
-                linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 20%),
-                linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 20%),
-                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.4) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.6) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(139, 0, 0, 0.3) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
             animation: gradientShift 15s ease infinite;
             z-index: -1;
             transition: background 0.5s ease;
@@ -65,9 +62,8 @@
 
         body.light-mode::after {
             background:
-                radial-gradient(circle at 20% 50%, rgba(220, 20, 60, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(178, 34, 34, 0.15) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.02) 0%, transparent 50%);
         }
 
         @keyframes gradientShift {
@@ -82,35 +78,31 @@
         }
 
         .glass {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow:
-                0 8px 32px 0 rgba(31, 38, 135, 0.37),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
         
         body.light-mode .glass {
-             background: rgba(255, 255, 255, 0.3);
-             border-color: rgba(255, 255, 255, 0.5);
-             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+             background: rgba(0, 0, 0, 0.02);
+             border-color: rgba(0, 0, 0, 0.06);
+             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
         }
 
         .glass-dark {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow:
-                0 8px 32px 0 rgba(0, 0, 0, 0.37),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
         
         body.light-mode .glass-dark {
-             background: rgba(255, 255, 255, 0.2);
-             border-color: rgba(255, 255, 255, 0.3);
-             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+             background: rgba(0, 0, 0, 0.015);
+             border-color: rgba(0, 0, 0, 0.05);
+             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
         }
 
         .navbar-transparent {
@@ -201,16 +193,16 @@
         }
 
         .user-badge {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             padding: 0.5rem 1.5rem;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         body.light-mode .user-badge {
-             background: rgba(255, 255, 255, 0.3);
-             border-color: rgba(220, 20, 60, 0.3);
+             background: rgba(0, 0, 0, 0.04);
+             border-color: rgba(0, 0, 0, 0.08);
         }
 
         .card-channel {
@@ -275,13 +267,13 @@
 
         .form-range {
             height: 6px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             outline: none;
         }
         
         body.light-mode .form-range {
-             background: rgba(255, 255, 255, 0.5);
+             background: rgba(0, 0, 0, 0.08);
         }
 
         .form-range::-webkit-slider-thumb {
@@ -376,14 +368,14 @@
             position: fixed;
             width: 10px;
             height: 10px;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(139, 0, 0, 0.3);
             border-radius: 50%;
             pointer-events: none;
             animation: float 15s infinite;
         }
         
         body.light-mode .particle {
-             background: rgba(220, 20, 60, 0.3);
+             background: rgba(139, 0, 0, 0.2);
         }
 
         @keyframes float {
@@ -457,82 +449,821 @@
             100% { transform: translateY(0); }
         }
 
+        /* Login Page - Behance Style with Background Slider */
         .auth-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            justify-content: space-between;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .auth-box {
+        /* Background Image Slider */
+        .auth-bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 450px;
-            padding: 2.5rem;
-            border-radius: 25px;
+            height: 100%;
+            z-index: 0;
         }
 
-        .auth-logo {
-            width: 80px;
-            height: 80px;
+        .auth-bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .auth-bg-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .auth-bg-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.92) 0%, 
+                rgba(0, 0, 0, 0.88) 50%, 
+                rgba(0, 0, 0, 0.92) 100%);
+        }
+
+        body.light-mode .auth-bg-slide::after {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.92) 0%, 
+                rgba(255, 255, 255, 0.88) 50%, 
+                rgba(255, 255, 255, 0.92) 100%);
+        }
+
+        /* Brand Section - Kiri Desktop */
+        .auth-brand {
+            flex: 1;
+            max-width: 500px;
+            z-index: 10;
+            position: relative;
+            animation: brandFadeIn 1s ease;
+        }
+
+        @keyframes brandFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .auth-brand-logo {
+            width: 100px;
+            height: 100px;
             background: linear-gradient(135deg, #8b0000, #dc143c);
-            border-radius: 20px;
+            border-radius: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 2rem;
-            box-shadow: 0 10px 40px rgba(139, 0, 0, 0.3);
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 20px 60px rgba(139, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: logoFloat 3s ease-in-out infinite;
         }
 
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .auth-brand-title {
+            font-size: 3.5rem;
+            font-weight: 700;
             color: white;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body.light-mode .auth-brand-title {
+            color: #1a1a1a;
+        }
+
+        .auth-brand-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        body.light-mode .auth-brand-subtitle {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .auth-brand-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .auth-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .auth-feature-item:hover {
+            background: rgba(139, 0, 0, 0.08);
+            border-color: rgba(139, 0, 0, 0.3);
+            transform: translateX(8px);
+        }
+
+        body.light-mode .auth-feature-item {
+            background: rgba(0, 0, 0, 0.015);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        body.light-mode .auth-feature-item:hover {
+            background: rgba(139, 0, 0, 0.04);
+            border-color: rgba(139, 0, 0, 0.15);
+        }
+
+        .auth-feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .auth-feature-text {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+        }
+
+        body.light-mode .auth-feature-text {
+            color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Apple Liquid Glass Container - Kanan Desktop */
+        .auth-box {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem 2.5rem;
+            border-radius: 32px;
+            position: relative;
+            z-index: 10;
+            margin-left: auto;
+            
+            /* Liquid Glass Effect - Apple Style */
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            
+            /* Subtle border with gradient */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+                0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            
+            /* Smooth animation */
+            animation: authBoxFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.light-mode .auth-box {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
+                0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        @keyframes authBoxFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px 0 rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                0 30px 60px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 
+                0 10px 30px rgba(139, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        body.light-mode .auth-title {
+            color: #1a1a1a;
+        }
+
+        body.light-mode .auth-subtitle {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Form Controls - Modern Apple Style */
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.875rem 1.25rem;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #dc143c;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(220, 20, 60, 0.6);
             color: white;
-            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.2);
+            box-shadow: 
+                0 0 0 4px rgba(220, 20, 60, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.4);
         }
 
+        body.light-mode .form-control {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+        }
+
+        body.light-mode .form-control:focus {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(220, 20, 60, 0.5);
+            color: #1a1a1a;
+            box-shadow: 
+                0 0 0 4px rgba(220, 20, 60, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        body.light-mode .form-label {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Button - Modern Gradient */
         .btn-glass {
             background: linear-gradient(135deg, #8b0000, #dc143c);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
+            padding: 0.875rem 1.5rem;
+            border-radius: 14px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(139, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .btn-glass:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            box-shadow: 
+                0 8px 25px rgba(139, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             color: white;
         }
 
+        .btn-glass:active {
+            transform: translateY(0);
+        }
+
         .btn-glass-outline {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.75rem 1.5rem;
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.875rem 1.5rem;
+            border-radius: 14px;
             font-weight: 600;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
         }
 
         .btn-glass-outline:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
             color: white;
+        }
+
+        body.light-mode .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+        }
+
+        body.light-mode .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.6);
+            color: #1a1a1a;
+        }
+
+        /* Links */
+        .auth-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #dc143c;
+        }
+
+        .auth-link-primary {
+            color: white;
+            font-weight: 600;
+        }
+
+        .auth-link-primary:hover {
+            color: #ff6b6b;
+        }
+
+        body.light-mode .auth-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-mode .auth-link:hover {
+            color: #8b0000;
+        }
+
+        body.light-mode .auth-link-primary {
+            color: #8b0000;
+        }
+
+        body.light-mode .auth-link-primary:hover {
+            color: #dc143c;
+        }
+
+        /* Divider */
+        .auth-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .auth-divider span {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 0 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+            border-radius: 8px;
+        }
+
+        body.light-mode .auth-divider::before {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .auth-divider span {
+            background: rgba(255, 255, 255, 0.5);
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 968px) {
+            .auth-container {
+                flex-direction: column;
+                justify-content: center;
+                padding: 2rem;
+            }
+
+            .auth-brand {
+                display: none; /* Hide brand section on mobile */
+            }
+
+            .auth-box {
+                max-width: 100%;
+                padding: 2.5rem 2rem;
+                border-radius: 28px;
+                margin-left: 0;
+            }
+
+            .auth-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Background Image Slider */
+        .auth-bg-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .auth-bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .auth-bg-slide.active {
+            opacity: 1;
+            z-index: 1;
+        }
+
+        .auth-bg-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(139, 0, 0, 0.85) 0%, 
+                rgba(0, 0, 0, 0.75) 50%, 
+                rgba(139, 0, 0, 0.85) 100%);
+        }
+
+        body.light-mode .auth-bg-slide::after {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.85) 0%, 
+                rgba(220, 20, 60, 0.25) 50%, 
+                rgba(255, 255, 255, 0.85) 100%);
+        }
+
+        /* Apple Liquid Glass Container */
+        .auth-box {
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem 2.5rem;
+            border-radius: 32px;
+            position: relative;
+            z-index: 10;
+            
+            /* Liquid Glass Effect - Apple Style */
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            
+            /* Subtle border with gradient */
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.37),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+                0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            
+            /* Smooth animation */
+            animation: authBoxFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body.light-mode .auth-box {
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 32px 0 rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+                0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes authBoxFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .auth-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px 0 rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+                0 30px 60px -15px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 
+                0 10px 30px rgba(139, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .auth-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        body.light-mode .auth-title {
+            color: #1a1a1a;
+        }
+
+        body.light-mode .auth-subtitle {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Form Controls - Modern Apple Style */
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.875rem 1.25rem;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(220, 20, 60, 0.6);
+            color: white;
+            box-shadow: 
+                0 0 0 4px rgba(220, 20, 60, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        body.light-mode .form-control {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+        }
+
+        body.light-mode .form-control:focus {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(220, 20, 60, 0.5);
+            color: #1a1a1a;
+            box-shadow: 
+                0 0 0 4px rgba(220, 20, 60, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .form-control::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        body.light-mode .form-label {
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Button - Modern Gradient */
+        .btn-glass {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 15px rgba(139, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(139, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .btn-glass:active {
+            transform: translateY(0);
+        }
+
+        .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.875rem 1.5rem;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        body.light-mode .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+        }
+
+        body.light-mode .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.6);
+            color: #1a1a1a;
+        }
+
+        /* Links */
+        .auth-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .auth-link:hover {
+            color: #dc143c;
+        }
+
+        .auth-link-primary {
+            color: white;
+            font-weight: 600;
+        }
+
+        .auth-link-primary:hover {
+            color: #ff6b6b;
+        }
+
+        body.light-mode .auth-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-mode .auth-link:hover {
+            color: #8b0000;
+        }
+
+        body.light-mode .auth-link-primary {
+            color: #8b0000;
+        }
+
+        body.light-mode .auth-link-primary:hover {
+            color: #dc143c;
+        }
+
+        /* Divider */
+        .auth-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .auth-divider span {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 0 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+            border-radius: 8px;
+        }
+
+        body.light-mode .auth-divider::before {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .auth-divider span {
+            background: rgba(255, 255, 255, 0.5);
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .auth-box {
+                max-width: 100%;
+                padding: 2.5rem 2rem;
+                border-radius: 28px;
+            }
+
+            .auth-title {
+                font-size: 1.5rem;
+            }
         }
 
         .modal-glass {
@@ -637,20 +1368,74 @@
     </div>
 
     <div id="loginPage" class="auth-container" style="display: flex;">
-        <div class="auth-box glass">
+        <!-- Background Image Slider -->
+        <div class="auth-bg-slider">
+            <div class="auth-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1920&q=80');"></div>
+        </div>
+        
+        <!-- Brand Section - Kiri -->
+        <div class="auth-brand">
+            <div class="auth-brand-logo">
+                <i class="bi bi-wind text-white" style="font-size: 3rem;"></i>
+            </div>
+            <h1 class="auth-brand-title">SONORA</h1>
+            <p class="auth-brand-subtitle">
+                Studio Suasana Relaksasi Spasial — Ciptakan ruang tenang Anda dengan suara ambient 3D, musik pribadi, dan preset soundscape.
+            </p>
+            <div class="auth-brand-features">
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-soundwave text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>8 Suara Ambient</strong> — Hujan, Petir, Ombak, Api, dan lebih
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-broadcast text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Audio Spasial 3D</strong> — Atur posisi suara di sekitar Anda
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-music-note-list text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Upload Musik</strong> — Tambahkan file musik pribadi Anda
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-bookmark-star text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Simpan Preset</strong> — Save kombinasi soundscape favorit
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section - Kanan -->
+        <div class="auth-box">
             <div class="auth-logo">
                 <i class="bi bi-wind text-white fs-1"></i>
             </div>
-            <h2 class="text-center text-white fw-bold mb-2">Selamat Datang</h2>
-            <p class="text-center text-white-muted mb-4">Masuk ke SONORA untuk melanjutkan</p>
+            <h2 class="auth-title">Selamat Datang</h2>
+            <p class="auth-subtitle">Masuk ke SONORA untuk melanjutkan</p>
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-3">
-                    <label class="form-label text-white-soft">Email</label>
+                    <label class="form-label">Email</label>
                     <input type="email" class="form-control" id="loginEmail" placeholder="nama@email.com" required>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label text-white-soft">Password</label>
+                    <label class="form-label">Password</label>
                     <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn btn-glass w-100 mb-3">
@@ -659,12 +1444,17 @@
                 <button type="button" class="btn btn-glass-outline w-100 mb-3" onclick="testLogin()">
                     <i class="bi bi-bug me-2"></i>Test Login (Demo)
                 </button>
+                
+                <div class="auth-divider">
+                    <span>atau</span>
+                </div>
+                
                 <div class="text-center">
-                    <span class="text-white-muted">Belum punya akun? </span>
-                    <a href="#" onclick="showRegister()" class="text-white fw-semibold text-decoration-none">Daftar Sekarang</a>
+                    <span class="auth-link">Belum punya akun? </span>
+                    <a href="#" onclick="showRegister()" class="auth-link-primary text-decoration-none">Daftar Sekarang</a>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="#" onclick="showBeranda()" class="text-white-muted small text-decoration-none">
+                    <a href="#" onclick="showBeranda()" class="auth-link small text-decoration-none">
                         <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
                     </a>
                 </div>
@@ -673,35 +1463,94 @@
     </div>
 
     <div id="registerPage" class="auth-container" style="display: none;">
-        <div class="auth-box glass">
+        <!-- Background Image Slider -->
+        <div class="auth-bg-slider">
+            <div class="auth-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80');"></div>
+            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1920&q=80');"></div>
+        </div>
+        
+        <!-- Brand Section - Kiri -->
+        <div class="auth-brand">
+            <div class="auth-brand-logo">
+                <i class="bi bi-wind text-white" style="font-size: 3rem;"></i>
+            </div>
+            <h1 class="auth-brand-title">SONORA</h1>
+            <p class="auth-brand-subtitle">
+                Mulai perjalanan relaksasi Anda. Daftar gratis dan akses ke semua fitur premium SONORA.
+            </p>
+            <div class="auth-brand-features">
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-check-circle text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>100% Gratis</strong> — Tidak ada biaya berlangganan
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-cloud-check text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Sinkronisasi</strong> — Preset dan musik tersimpan di cloud
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-headphones text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Kualitas Tinggi</strong> — Audio berkualitas studio
+                    </div>
+                </div>
+                <div class="auth-feature-item">
+                    <div class="auth-feature-icon">
+                        <i class="bi bi-device-hdd text-white"></i>
+                    </div>
+                    <div class="auth-feature-text">
+                        <strong>Unlimited</strong> — Upload musik tanpa batas
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Section - Kanan -->
+        <div class="auth-box">
             <div class="auth-logo">
                 <i class="bi bi-person-plus text-white fs-1"></i>
             </div>
-            <h2 class="text-center text-white fw-bold mb-2">Buat Akun Baru</h2>
-            <p class="text-center text-white-muted mb-4">Bergabung dengan SONORA sekarang</p>
+            <h2 class="auth-title">Buat Akun Baru</h2>
+            <p class="auth-subtitle">Bergabung dengan SONORA sekarang</p>
 
             <form onsubmit="handleRegister(event)">
                 <div class="mb-3">
-                    <label class="form-label text-white-soft">Nama Lengkap</label>
+                    <label class="form-label">Nama Lengkap</label>
                     <input type="text" class="form-control" id="registerName" placeholder="John Doe" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label text-white-soft">Email</label>
+                    <label class="form-label">Email</label>
                     <input type="email" class="form-control" id="registerEmail" placeholder="nama@email.com" required>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label text-white-soft">Password</label>
+                    <label class="form-label">Password</label>
                     <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn btn-glass w-100 mb-3">
                     <i class="bi bi-check-circle me-2"></i>Daftar
                 </button>
+                
+                <div class="auth-divider">
+                    <span>atau</span>
+                </div>
+                
                 <div class="text-center">
-                    <span class="text-white-muted">Sudah punya akun? </span>
-                    <a href="#" onclick="showLogin()" class="text-white fw-semibold text-decoration-none">Masuk</a>
+                    <span class="auth-link">Sudah punya akun? </span>
+                    <a href="#" onclick="showLogin()" class="auth-link-primary text-decoration-none">Masuk</a>
                 </div>
                 <div class="text-center mt-3">
-                    <a href="#" onclick="showBeranda()" class="text-white-muted small text-decoration-none">
+                    <a href="#" onclick="showBeranda()" class="auth-link small text-decoration-none">
                         <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
                     </a>
                 </div>
@@ -1615,6 +2464,9 @@
                 alert('PERINGATAN: Penyimpanan data tidak tersedia. Pastikan WebView mengaktifkan localStorage!');
             }
             
+            // Initialize background slider
+            initBackgroundSlider();
+            
             const savedUser = localStorage.getItem('sonoraCurrentUser');
             if (savedUser) {
                 try {
@@ -1631,6 +2483,21 @@
                 showLogin();
             }
         });
+
+        // Background Image Slider
+        function initBackgroundSlider() {
+            const slides = document.querySelectorAll('.auth-bg-slide');
+            let currentSlide = 0;
+            
+            function nextSlide() {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+            
+            // Change slide every 5 seconds
+            setInterval(nextSlide, 5000);
+        }
     </script>
 </body>
 </html>
