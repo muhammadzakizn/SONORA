@@ -1,32 +1,61 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="SONORA - Studio Suasana Relaksasi Spasial dengan teknologi audio 3D">
     <title>SONORA - Studio Suasana Relaksasi Spasial</title>
 
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+        /* CSS Variables for Theme Management */
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --accent-primary: #dc143c;
+            --accent-secondary: #8b0000;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #3a0000;
+            --text-muted: rgba(139, 0, 0, 0.7);
+            --glass-bg: rgba(0, 0, 0, 0.02);
+            --glass-border: rgba(0, 0, 0, 0.06);
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             min-height: 100vh;
-            transition: all 0.3s ease;
-            background: #000000 !important; /* Pure Black */
+            background: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            touch-action: manipulation;
         }
 
         body::before {
@@ -36,13 +65,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000000; /* Pure Black */
+            background: var(--bg-primary);
             z-index: -2;
             transition: background 0.5s ease;
-        }
-
-        body.light-mode::before {
-            background: #FFFFFF; /* Pure White */
         }
 
         body::after {
@@ -52,76 +77,57 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
             animation: gradientShift 15s ease infinite;
             z-index: -1;
-            transition: background 0.5s ease;
+            pointer-events: none;
         }
 
         body.light-mode::after {
-            background:
-                radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.03) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.02) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(139, 0, 0, 0.02) 0%, transparent 50%);
         }
 
         @keyframes gradientShift {
-            0%, 100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.8;
-                transform: scale(1.1);
-            }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
         }
 
+        /* Glass Effect */
         .glass {
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-        }
-        
-        body.light-mode .glass {
-             background: rgba(0, 0, 0, 0.02);
-             border-color: rgba(0, 0, 0, 0.06);
-             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px var(--shadow);
+            contain: layout style paint;
         }
 
         .glass-dark {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 32px var(--shadow);
+            contain: layout style paint;
         }
-        
+
         body.light-mode .glass-dark {
-             background: rgba(0, 0, 0, 0.015);
-             border-color: rgba(0, 0, 0, 0.05);
-             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+            background: rgba(0, 0, 0, 0.015);
+            border-color: rgba(0, 0, 0, 0.05);
         }
 
-        .navbar-transparent {
-            background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-            box-shadow: none;
-            transition: all 0.3s ease;
-        }
+        /* Typography */
+        .text-primary { color: var(--text-primary) !important; }
+        .text-secondary { color: var(--text-secondary) !important; }
+        .text-muted { color: var(--text-muted) !important; }
 
-        body.light-mode .navbar-transparent .nav-link,
-        body.light-mode .navbar-transparent .navbar-brand {
-             color: #3a0000;
-        }
-
+        /* Feature Box */
         .feature-box {
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            will-change: transform;
         }
 
         .feature-box:hover {
@@ -132,7 +138,7 @@
         }
 
         body.light-mode .feature-box {
-             border-color: rgba(220, 20, 60, 0.2);
+            border-color: rgba(220, 20, 60, 0.2);
         }
 
         body.light-mode .feature-box:hover {
@@ -140,46 +146,137 @@
             border-color: rgba(220, 20, 60, 0.5);
         }
 
+        /* Floating Taskbar */
         .floating-taskbar {
             position: fixed;
-            bottom: 1.5rem;
+            bottom: 1rem;
             left: 50%;
             transform: translateX(-50%);
             padding: 0.75rem 1rem;
-            border-radius: 99px;
-            z-index: 100;
+            border-radius: 25px;
+            z-index: 1000;
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
             align-items: center;
+            max-width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .floating-taskbar .btn-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+        body.light-mode .floating-taskbar {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.6rem 0.4rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            background: transparent;
+            min-width: 60px;
+            position: relative;
+        }
+
+        .nav-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        body.light-mode .nav-button:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-button.active {
+            background: rgba(220, 20, 60, 0.15);
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .nav-button.active::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            border-radius: 0 0 10px 10px;
+        }
+
+        .nav-button.primary {
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        .nav-button.primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .nav-icon {
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 0;
             font-size: 1.2rem;
-        }
-        
-        .floating-taskbar .btn {
-            padding-top: 0.6rem;
-            padding-bottom: 0.6rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
         }
 
-        .sonora-header {
-            padding: 2rem;
-            border-radius: 25px;
-            margin-bottom: 2rem;
+        .nav-button.active .nav-icon,
+        .nav-button:hover .nav-icon,
+        .nav-button.primary .nav-icon {
+            color: var(--accent-primary);
+        }
+
+        .nav-button.primary .nav-icon {
+            color: white;
+        }
+
+        body.light-mode .nav-button.active .nav-icon,
+        body.light-mode .nav-button:hover .nav-icon {
+            color: var(--accent-secondary);
+        }
+
+        .nav-label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
             transition: all 0.3s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .nav-button.active .nav-label,
+        .nav-button:hover .nav-label {
+            color: var(--accent-primary);
+        }
+
+        .nav-button.primary .nav-label {
+            color: white;
+        }
+
+        body.light-mode .nav-button.active .nav-label,
+        body.light-mode .nav-button:hover .nav-label {
+            color: var(--accent-secondary);
+        }
+
+        /* Header */
+        .sonora-header {
+            padding: 1.5rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
         }
 
         .sonora-logo {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
             border-radius: 15px;
             display: flex;
             align-items: center;
@@ -187,11 +284,12 @@
             font-size: 2rem;
             box-shadow: 0 5px 20px rgba(139, 0, 0, 0.4);
         }
-        
+
         body.light-mode .sonora-logo {
-             box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.2);
         }
 
+        /* User Badge */
         .user-badge {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -199,18 +297,20 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        
+
         body.light-mode .user-badge {
-             background: rgba(0, 0, 0, 0.04);
-             border-color: rgba(0, 0, 0, 0.08);
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.08);
         }
 
+        /* Channel Cards */
         .card-channel {
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: none;
             overflow: hidden;
-            border-radius: 25px;
+            border-radius: 20px;
             padding: 1.5rem;
+            will-change: transform;
         }
 
         .card-channel:hover {
@@ -218,104 +318,171 @@
         }
 
         .channel-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
             filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
         }
 
+        /* Play Button */
         .play-btn {
-            width: 55px;
-            height: 55px;
-            border-radius: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             border: none;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             color: white;
             transition: all 0.3s ease;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
+
         body.light-mode .play-btn {
-             background: rgba(255, 255, 255, 0.4);
-             color: #3a0000;
+            background: rgba(255, 255, 255, 0.4);
+            color: var(--text-secondary);
         }
 
         .play-btn.active {
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
             box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6);
             animation: pulse-red 2s ease-in-out infinite;
             color: white;
         }
-        
+
         body.light-mode .play-btn.active {
-             box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
         }
-        
-        .play-btn:hover {
-            transform: scale(1.1);
+
+        .play-btn:active {
+            transform: scale(0.95);
         }
 
         @keyframes pulse-red {
-            0%, 100% {
-                box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6);
-            }
-            50% {
-                box-shadow: 0 8px 35px rgba(220, 20, 60, 0.9);
-            }
+            0%, 100% { box-shadow: 0 8px 25px rgba(139, 0, 0, 0.6); }
+            50% { box-shadow: 0 8px 35px rgba(220, 20, 60, 0.9); }
         }
 
+        /* Form Controls */
         .form-range {
             height: 6px;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             outline: none;
         }
-        
+
         body.light-mode .form-range {
-             background: rgba(0, 0, 0, 0.08);
+            background: rgba(0, 0, 0, 0.08);
         }
 
         .form-range::-webkit-slider-thumb {
             width: 18px;
             height: 18px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
             border-radius: 50%;
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(139, 0, 0, 0.5);
         }
 
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            padding: 0.875rem 1.25rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.15);
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        body.light-mode .form-control {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .form-control:focus {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn-glass {
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
+        }
+
+        .btn-glass:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            color: white;
+        }
+
+        .btn-glass:active {
+            transform: translateY(0);
+        }
+
+        .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-glass-outline:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            color: var(--text-primary);
+        }
+
+        body.light-mode .btn-glass-outline {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Timer Display */
         .timer-display {
             font-size: 2.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #dc143c, #ff6b6b);
+            background: linear-gradient(135deg, var(--accent-primary), #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
         }
 
-        .preset-badge {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.75rem 1.5rem;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        body.light-mode .preset-badge {
-             background: rgba(255, 255, 255, 0.3);
-             border-color: rgba(220, 20, 60, 0.3);
-        }
-
-        .preset-badge:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateX(5px);
-        }
-
-        .music-item {
+        /* Music & Preset Items */
+        .music-item, .preset-badge {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -324,132 +491,82 @@
             margin-bottom: 0.5rem;
             transition: all 0.3s ease;
         }
-        
-        body.light-mode .music-item {
-             background: rgba(255, 255, 255, 0.25);
-             border-color: rgba(255, 255, 255, 0.4);
+
+        body.light-mode .music-item,
+        body.light-mode .preset-badge {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
-        .music-item:hover {
+        .music-item:hover, .preset-badge:hover {
             background: rgba(255, 255, 255, 0.15);
             transform: translateX(5px);
         }
 
-        .text-white,
-        body.light-mode .text-dark {
-             color: #fff !important;
-        }
-        
-        .text-white-soft,
-        body.light-mode .text-dark-soft {
-            color: rgba(255, 255, 255, 0.9) !important;
+        .preset-badge {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .text-white-muted,
-        body.light-mode .text-dark-muted {
-            color: rgba(255, 255, 255, 0.6) !important;
-        }
-        
-        body.light-mode .text-white,
-        body.light-mode .text-white-soft,
-        body.light-mode .text-white-muted {
-             color: #3a0000 !important;
-        }
-        
-        body.light-mode .text-white-muted {
-             color: rgba(139, 0, 0, 0.7) !important;
-        }
-
-        .border-accent {
-            border-left: 4px solid;
-        }
-
-        .particle {
+        /* Toast Notification */
+        .toast-container {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: rgba(139, 0, 0, 0.3);
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+        }
+
+        .toast-notification {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 8px 32px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        body.light-mode .toast-notification {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .toast-notification.success { border-left: 4px solid #10b981; }
+        .toast-notification.error { border-left: 4px solid #ef4444; }
+        .toast-notification.info { border-left: 4px solid #3b82f6; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
-            pointer-events: none;
-            animation: float 15s infinite;
-        }
-        
-        body.light-mode .particle {
-             background: rgba(139, 0, 0, 0.2);
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
         }
 
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(100px);
-                opacity: 0;
-            }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        .animated-title-container {
-            overflow: hidden;
-            height: 1.2em;
-            line-height: 1.2em;
-            display: inline-block;
-            vertical-align: bottom;
-        }
-
-        .animated-word {
-            display: inline-block;
-            animation: slideUp 12s infinite;
-        }
-
-        .animated-word span {
-            display: block;
-            height: 1.2em;
-            line-height: 1.2em;
-            color: #ff6b6b;
-            padding-bottom: 0.1em;
-        }
-        
-        body.light-mode .animated-word span {
-            color: #8b0000;
-        }
-
-        @keyframes slideUp {
-            0%   { transform: translateY(0); }
-            20%  { transform: translateY(0); }
-            25%  { transform: translateY(-1.2em); }
-            45%  { transform: translateY(-1.2em); }
-            50%  { transform: translateY(-2.4em); }
-            70%  { transform: translateY(-2.4em); }
-            75%  { transform: translateY(-3.6em); }
-            95%  { transform: translateY(-3.6em); }
-            100% { transform: translateY(0); }
-        }
-
-        /* Login Page - Behance Style with Background Slider */
+        /* Auth Pages */
         .auth-container {
             min-height: 100vh;
             display: flex;
@@ -460,7 +577,6 @@
             overflow: hidden;
         }
 
-        /* Background Image Slider */
         .auth-bg-slider {
             position: fixed;
             top: 0;
@@ -480,7 +596,6 @@
             transition: opacity 2s ease-in-out;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
         }
 
         .auth-bg-slide.active {
@@ -508,7 +623,6 @@
                 rgba(255, 255, 255, 0.92) 100%);
         }
 
-        /* Brand Section - Kiri Desktop */
         .auth-brand {
             flex: 1;
             max-width: 500px;
@@ -518,28 +632,20 @@
         }
 
         @keyframes brandFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .auth-brand-logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
-            border-radius: 28px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            border-radius: 25px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 2rem;
-            box-shadow: 
-                0 20px 60px rgba(139, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(139, 0, 0, 0.5);
             animation: logoFloat 3s ease-in-out infinite;
         }
 
@@ -549,33 +655,18 @@
         }
 
         .auth-brand-title {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             margin-bottom: 1rem;
             line-height: 1.1;
-            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        body.light-mode .auth-brand-title {
-            color: #1a1a1a;
         }
 
         .auth-brand-subtitle {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.15rem;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 2rem;
-        }
-
-        body.light-mode .auth-brand-subtitle {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        .auth-brand-features {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
         }
 
         .auth-feature-item {
@@ -584,9 +675,10 @@
             gap: 1rem;
             padding: 1rem;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
+            border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.3s ease;
+            margin-bottom: 1rem;
         }
 
         .auth-feature-item:hover {
@@ -600,15 +692,10 @@
             border-color: rgba(0, 0, 0, 0.06);
         }
 
-        body.light-mode .auth-feature-item:hover {
-            background: rgba(139, 0, 0, 0.04);
-            border-color: rgba(139, 0, 0, 0.15);
-        }
-
         .auth-feature-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -617,254 +704,79 @@
             flex-shrink: 0;
         }
 
-        .auth-feature-text {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
-        }
-
-        body.light-mode .auth-feature-text {
-            color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Apple Liquid Glass Container - Kanan Desktop */
         .auth-box {
             width: 100%;
             max-width: 450px;
             padding: 3rem 2.5rem;
-            border-radius: 32px;
+            border-radius: 30px;
             position: relative;
             z-index: 10;
             margin-left: auto;
-            
-            /* Liquid Glass Effect - Apple Style */
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
-            
-            /* Subtle border with gradient */
             border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 
-                0 8px 32px 0 rgba(0, 0, 0, 0.37),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-                0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            
-            /* Smooth animation */
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.15);
             animation: authBoxFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         body.light-mode .auth-box {
             background: rgba(255, 255, 255, 0.4);
             border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 
-                0 8px 32px 0 rgba(0, 0, 0, 0.06),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.8),
-                0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         @keyframes authBoxFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .auth-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 12px 40px 0 rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                0 30px 60px -15px rgba(0, 0, 0, 0.3);
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .auth-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            box-shadow: 
-                0 10px 30px rgba(139, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.4);
         }
 
         .auth-title {
             font-size: 1.75rem;
             font-weight: 700;
-            color: white;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
             text-align: center;
         }
 
         .auth-subtitle {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             font-size: 0.95rem;
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        body.light-mode .auth-title {
-            color: #1a1a1a;
-        }
-
-        body.light-mode .auth-subtitle {
-            color: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Form Controls - Modern Apple Style */
-        .form-control {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            padding: 0.875rem 1.25rem;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(220, 20, 60, 0.6);
-            color: white;
-            box-shadow: 
-                0 0 0 4px rgba(220, 20, 60, 0.15),
-                0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        body.light-mode .form-control {
-            background: rgba(255, 255, 255, 0.5);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #1a1a1a;
-        }
-
-        body.light-mode .form-control:focus {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(220, 20, 60, 0.5);
-            color: #1a1a1a;
-            box-shadow: 
-                0 0 0 4px rgba(220, 20, 60, 0.1),
-                0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-mode .form-control::placeholder {
-            color: rgba(0, 0, 0, 0.4);
-        }
-
-        .form-label {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        body.light-mode .form-label {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Button - Modern Gradient */
-        .btn-glass {
-            background: linear-gradient(135deg, #8b0000, #dc143c);
-            color: white;
-            border: none;
-            padding: 0.875rem 1.5rem;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 4px 15px rgba(139, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-glass:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 25px rgba(139, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .btn-glass:active {
-            transform: translateY(0);
-        }
-
-        .btn-glass-outline {
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.875rem 1.5rem;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-glass-outline:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        body.light-mode .btn-glass-outline {
-            background: rgba(255, 255, 255, 0.4);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #1a1a1a;
-        }
-
-        body.light-mode .btn-glass-outline:hover {
-            background: rgba(255, 255, 255, 0.6);
-            color: #1a1a1a;
-        }
-
-        /* Links */
         .auth-link {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-muted);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .auth-link:hover {
-            color: #dc143c;
+            color: var(--accent-primary);
         }
 
         .auth-link-primary {
-            color: white;
+            color: var(--text-primary);
             font-weight: 600;
+            cursor: pointer;
         }
 
         .auth-link-primary:hover {
-            color: #ff6b6b;
+            color: var(--accent-primary);
         }
 
-        body.light-mode .auth-link {
-            color: rgba(0, 0, 0, 0.6);
-        }
-
-        body.light-mode .auth-link:hover {
-            color: #8b0000;
-        }
-
-        body.light-mode .auth-link-primary {
-            color: #8b0000;
-        }
-
-        body.light-mode .auth-link-primary:hover {
-            color: #dc143c;
-        }
-
-        /* Divider */
         .auth-divider {
             text-align: center;
             margin: 1.5rem 0;
@@ -881,430 +793,150 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        body.light-mode .auth-divider::before {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
         .auth-divider span {
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             padding: 0 1rem;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--text-muted);
             font-size: 0.875rem;
             position: relative;
             z-index: 1;
             border-radius: 8px;
         }
 
-        body.light-mode .auth-divider::before {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
         body.light-mode .auth-divider span {
             background: rgba(255, 255, 255, 0.5);
-            color: rgba(0, 0, 0, 0.5);
         }
 
-        /* Mobile Responsive */
+        /* Animated Title */
+        .animated-title-container {
+            overflow: hidden;
+            height: 1.2em;
+            line-height: 1.2em;
+            display: inline-block;
+            vertical-align: bottom;
+        }
+
+        .animated-word {
+            display: inline-block;
+            animation: slideUp 12s infinite;
+        }
+
+        .animated-word span {
+            display: block;
+            height: 1.2em;
+            line-height: 1.2em;
+            color: #ff6b6b;
+        }
+
+        body.light-mode .animated-word span {
+            color: var(--accent-secondary);
+        }
+
+        @keyframes slideUp {
+            0% { transform: translateY(0); }
+            20% { transform: translateY(0); }
+            25% { transform: translateY(-1.2em); }
+            45% { transform: translateY(-1.2em); }
+            50% { transform: translateY(-2.4em); }
+            70% { transform: translateY(-2.4em); }
+            75% { transform: translateY(-3.6em); }
+            95% { transform: translateY(-3.6em); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Accessibility */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Focus Styles */
+        *:focus-visible {
+            outline: 2px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 968px) {
             .auth-container {
                 flex-direction: column;
                 justify-content: center;
                 padding: 2rem;
             }
-
-            .auth-brand {
-                display: none; /* Hide brand section on mobile */
-            }
-
+            .auth-brand { display: none; }
             .auth-box {
                 max-width: 100%;
-                padding: 2.5rem 2rem;
-                border-radius: 28px;
+                padding: 2rem 1.5rem;
                 margin-left: 0;
             }
+            .floating-taskbar {
+                padding: 0.5rem 0.75rem;
+                gap: 0.25rem;
+            }
+            .nav-button {
+                min-width: 50px;
+                padding: 0.5rem 0.3rem;
+            }
+            .nav-label { font-size: 0.6rem; }
+        }
 
-            .auth-title {
-                font-size: 1.5rem;
+        /* Touch Targets */
+        @media (hover: none) and (pointer: coarse) {
+            .btn, .play-btn, .nav-button {
+                min-height: 44px;
+                min-width: 44px;
             }
         }
 
-        /* Background Image Slider */
-        .auth-bg-slider {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .auth-bg-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .auth-bg-slide.active {
-            opacity: 1;
-            z-index: 1;
-        }
-
-        .auth-bg-slide::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, 
-                rgba(139, 0, 0, 0.85) 0%, 
-                rgba(0, 0, 0, 0.75) 50%, 
-                rgba(139, 0, 0, 0.85) 100%);
-        }
-
-        body.light-mode .auth-bg-slide::after {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.85) 0%, 
-                rgba(220, 20, 60, 0.25) 50%, 
-                rgba(255, 255, 255, 0.85) 100%);
-        }
-
-        /* Apple Liquid Glass Container */
-        .auth-box {
-            width: 100%;
-            max-width: 450px;
-            padding: 3rem 2.5rem;
-            border-radius: 32px;
-            position: relative;
-            z-index: 10;
-            
-            /* Liquid Glass Effect - Apple Style */
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(40px) saturate(200%);
-            -webkit-backdrop-filter: blur(40px) saturate(200%);
-            
-            /* Subtle border with gradient */
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 
-                0 8px 32px 0 rgba(0, 0, 0, 0.37),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
-                0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            
-            /* Smooth animation */
-            animation: authBoxFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        body.light-mode .auth-box {
-            background: rgba(255, 255, 255, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 
-                0 8px 32px 0 rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
-                0 25px 50px -12px rgba(0, 0, 0, 0.15);
-        }
-
-        @keyframes authBoxFadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .auth-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 12px 40px 0 rgba(0, 0, 0, 0.45),
-                inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
-                0 30px 60px -15px rgba(0, 0, 0, 0.3);
-        }
-
-        .auth-logo {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: 
-                0 10px 30px rgba(139, 0, 0, 0.4),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            animation: logoFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .auth-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-align: center;
-        }
-
-        .auth-subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.95rem;
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        body.light-mode .auth-title {
-            color: #1a1a1a;
-        }
-
-        body.light-mode .auth-subtitle {
-            color: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Form Controls - Modern Apple Style */
-        .form-control {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: white;
-            padding: 0.875rem 1.25rem;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(220, 20, 60, 0.6);
-            color: white;
-            box-shadow: 
-                0 0 0 4px rgba(220, 20, 60, 0.15),
-                0 4px 12px rgba(0, 0, 0, 0.1);
-            transform: translateY(-1px);
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        body.light-mode .form-control {
-            background: rgba(255, 255, 255, 0.5);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #1a1a1a;
-        }
-
-        body.light-mode .form-control:focus {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(220, 20, 60, 0.5);
-            color: #1a1a1a;
-            box-shadow: 
-                0 0 0 4px rgba(220, 20, 60, 0.1),
-                0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        body.light-mode .form-control::placeholder {
-            color: rgba(0, 0, 0, 0.4);
-        }
-
-        .form-label {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        body.light-mode .form-label {
-            color: rgba(0, 0, 0, 0.7);
-        }
-
-        /* Button - Modern Gradient */
-        .btn-glass {
-            background: linear-gradient(135deg, #8b0000, #dc143c);
-            color: white;
-            border: none;
-            padding: 0.875rem 1.5rem;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 4px 15px rgba(139, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        }
-
-        .btn-glass:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 25px rgba(139, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .btn-glass:active {
-            transform: translateY(0);
-        }
-
-        .btn-glass-outline {
-            background: rgba(255, 255, 255, 0.08);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.875rem 1.5rem;
-            border-radius: 14px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-glass-outline:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        body.light-mode .btn-glass-outline {
-            background: rgba(255, 255, 255, 0.4);
-            border-color: rgba(0, 0, 0, 0.1);
-            color: #1a1a1a;
-        }
-
-        body.light-mode .btn-glass-outline:hover {
-            background: rgba(255, 255, 255, 0.6);
-            color: #1a1a1a;
-        }
-
-        /* Links */
-        .auth-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .auth-link:hover {
-            color: #dc143c;
-        }
-
-        .auth-link-primary {
-            color: white;
-            font-weight: 600;
-        }
-
-        .auth-link-primary:hover {
-            color: #ff6b6b;
-        }
-
-        body.light-mode .auth-link {
-            color: rgba(0, 0, 0, 0.6);
-        }
-
-        body.light-mode .auth-link:hover {
-            color: #8b0000;
-        }
-
-        body.light-mode .auth-link-primary {
-            color: #8b0000;
-        }
-
-        body.light-mode .auth-link-primary:hover {
-            color: #dc143c;
-        }
-
-        /* Divider */
-        .auth-divider {
-            text-align: center;
-            margin: 1.5rem 0;
-            position: relative;
-        }
-
-        .auth-divider::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            width: 100%;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .auth-divider span {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 0 1rem;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.875rem;
-            position: relative;
-            z-index: 1;
-            border-radius: 8px;
-        }
-
-        body.light-mode .auth-divider::before {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        body.light-mode .auth-divider span {
-            background: rgba(255, 255, 255, 0.5);
-            color: rgba(0, 0, 0, 0.5);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .auth-box {
-                max-width: 100%;
-                padding: 2.5rem 2rem;
-                border-radius: 28px;
-            }
-
-            .auth-title {
-                font-size: 1.5rem;
-            }
-        }
-
-        .modal-glass {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        body.light-mode .modal-glass {
-            background: rgba(255, 255, 255, 0.6);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.3); }
     </style>
 </head>
 
 <body>
-    <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
-    <div class="particle" style="left: 30%; animation-delay: 3s;"></div>
-    <div class="particle" style="left: 50%; animation-delay: 6s;"></div>
-    <div class="particle" style="left: 70%; animation-delay: 9s;"></div>
-    <div class="particle" style="left: 90%; animation-delay: 12s;"></div>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer" role="alert" aria-live="polite" aria-atomic="true"></div>
 
+    <!-- Beranda Page -->
     <div id="berandaPage" style="display: none;">
-        <nav class="navbar navbar-expand-lg fixed-top navbar-transparent" id="mainNavbar">
+        <nav class="navbar navbar-expand-lg fixed-top" style="background: transparent;" role="navigation">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                    <div class="sonora-logo" style="width: 45px; height: 45px; font-size: 1.7rem; border-radius: 12px;">
-                        <i class="bi bi-wind text-white"></i>
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#" aria-label="SONORA Home">
+                    <div class="sonora-logo" style="width: 45px; height: 45px; font-size: 1.5rem; border-radius: 12px;">
+                        <i class="bi bi-wind text-white" aria-hidden="true"></i>
                     </div>
-                    <h5 class="mb-0 text-white fw-bold">SONORA</h5>
+                    <h5 class="mb-0 text-primary fw-bold">SONORA</h5>
                 </a>
             </div>
         </nav>
 
-        <div class="container" style="padding-top: 90px; padding-bottom: 120px;">
-            <div class="row align-items-center justify-content-center text-center text-white" style="min-height: 70vh;">
+        <main class="container" style="padding-top: 90px; padding-bottom: 120px;">
+            <div class="row align-items-center justify-content-center text-center" style="min-height: 70vh;">
                 <div class="col-lg-9">
-                    <h1 class="display-3 fw-bold mb-3" style="text-shadow: 0 5px 20px rgba(139, 0, 0, 0.5);">
+                    <h1 class="display-3 fw-bold mb-3 text-primary">
                         Studio Relaksasi 
                         <div class="animated-title-container">
                             <div class="animated-word">
@@ -1316,70 +948,77 @@
                         </div>
                          Anda
                     </h1>
-                    <p class="fs-5 text-white-muted mb-5">
+                    <p class="fs-5 text-muted mb-5">
                         Ciptakan suasana tenang Anda. Gabungkan suara alam, atur audio 3D,
                         dan temukan fokus, relaksasi, atau tidur nyenyak.
                     </p>
 
                     <div class="mb-4 text-start">
-                        <h5 class="text-white fw-semibold text-center mb-4">Fitur Utama</h5>
+                        <h2 class="h5 text-primary fw-semibold text-center mb-4">Fitur Utama</h2>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box">
-                                    <i class="bi bi-soundwave fs-4 text-danger"></i>
-                                    <span class="text-white-soft">Buat <i>Soundscape</i> Kustom</span>
+                                    <i class="bi bi-soundwave fs-4 text-danger" aria-hidden="true"></i>
+                                    <span class="text-secondary">Buat Soundscape Kustom</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box">
-                                    <i class="bi bi-broadcast fs-4 text-danger"></i>
-                                    <span class="text-white-soft">Atur Suara Spasial 3D</span>
+                                    <i class="bi bi-broadcast fs-4 text-danger" aria-hidden="true"></i>
+                                    <span class="text-secondary">Atur Suara Spasial 3D</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box">
-                                    <i class="bi bi-music-note-list fs-4 text-danger"></i>
-                                    <span class="text-white-soft">Upload Musik Pribadi</span>
+                                    <i class="bi bi-music-note-list fs-4 text-danger" aria-hidden="true"></i>
+                                    <span class="text-secondary">Upload Musik Pribadi</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex align-items-center gap-3 p-3 glass-dark rounded-4 feature-box">
-                                    <i class="bi bi-bookmark-star fs-4 text-danger"></i>
-                                    <span class="text-white-soft">Simpan Preset Favorit</span>
+                                    <i class="bi bi-bookmark-star fs-4 text-danger" aria-hidden="true"></i>
+                                    <span class="text-secondary">Simpan Preset Favorit</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
 
-        <div class="floating-taskbar glass-dark">
-            <button type="button" class="btn btn-glass-outline btn-icon" title="Toggle Mode" onclick="toggleTheme()">
-                <i class="bi bi-moon-stars" id="themeIcon"></i>
+        <nav class="floating-taskbar glass-dark" role="navigation" aria-label="Primary navigation">
+            <button class="nav-button" onclick="toggleTheme()" title="Toggle Theme" aria-label="Toggle light/dark mode">
+                <div class="nav-icon">
+                    <i class="bi bi-moon-stars" id="themeIconBeranda" aria-hidden="true"></i>
+                </div>
+                <div class="nav-label">Theme</div>
             </button>
-            <button type="button" class="btn btn-glass-outline flex-grow-1" onclick="showRegister()">
-                <i class="bi bi-person-plus me-2"></i>Daftar
+            <button class="nav-button" onclick="showRegister()" aria-label="Register">
+                <div class="nav-icon">
+                    <i class="bi bi-person-plus" aria-hidden="true"></i>
+                </div>
+                <div class="nav-label">Daftar</div>
             </button>
-            <button type="button" class="btn btn-glass flex-grow-1" onclick="showLogin()">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+            <button class="nav-button primary" onclick="showLogin()" aria-label="Login">
+                <div class="nav-icon">
+                    <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+                </div>
+                <div class="nav-label">Masuk</div>
             </button>
-        </div>
+        </nav>
     </div>
 
+    <!-- Login Page -->
     <div id="loginPage" class="auth-container" style="display: flex;">
-        <!-- Background Image Slider -->
-        <div class="auth-bg-slider">
+        <div class="auth-bg-slider" aria-hidden="true">
             <div class="auth-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1920&q=80');"></div>
             <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80');"></div>
             <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80');"></div>
-            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1920&q=80');"></div>
         </div>
         
-        <!-- Brand Section - Kiri -->
         <div class="auth-brand">
             <div class="auth-brand-logo">
-                <i class="bi bi-wind text-white" style="font-size: 3rem;"></i>
+                <i class="bi bi-wind text-white" style="font-size: 2.5rem;" aria-hidden="true"></i>
             </div>
             <h1 class="auth-brand-title">SONORA</h1>
             <p class="auth-brand-subtitle">
@@ -1388,61 +1027,60 @@
             <div class="auth-brand-features">
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-soundwave text-white"></i>
+                        <i class="bi bi-soundwave text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>8 Suara Ambient</strong> — Hujan, Petir, Ombak, Api, dan lebih
                     </div>
                 </div>
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-broadcast text-white"></i>
+                        <i class="bi bi-broadcast text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>Audio Spasial 3D</strong> — Atur posisi suara di sekitar Anda
                     </div>
                 </div>
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-music-note-list text-white"></i>
+                        <i class="bi bi-music-note-list text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>Upload Musik</strong> — Tambahkan file musik pribadi Anda
                     </div>
                 </div>
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-bookmark-star text-white"></i>
+                        <i class="bi bi-bookmark-star text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>Simpan Preset</strong> — Save kombinasi soundscape favorit
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Form Section - Kanan -->
         <div class="auth-box">
             <div class="auth-logo">
-                <i class="bi bi-wind text-white fs-1"></i>
+                <i class="bi bi-wind text-white fs-1" aria-hidden="true"></i>
             </div>
             <h2 class="auth-title">Selamat Datang</h2>
             <p class="auth-subtitle">Masuk ke SONORA untuk melanjutkan</p>
 
-            <form onsubmit="handleLogin(event)">
+            <form onsubmit="handleLogin(event)" id="loginForm">
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" id="loginEmail" placeholder="nama@email.com" required>
+                    <label class="form-label" for="loginEmail">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="nama@email.com" required autocomplete="email">
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required>
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="••••••••" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="btn btn-glass w-100 mb-3">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                <button type="submit" class="btn btn-glass w-100 mb-3" id="loginBtn">
+                    <i class="bi bi-box-arrow-in-right me-2" aria-hidden="true"></i>Masuk
                 </button>
                 <button type="button" class="btn btn-glass-outline w-100 mb-3" onclick="testLogin()">
-                    <i class="bi bi-bug me-2"></i>Test Login (Demo)
+                    <i class="bi bi-bug me-2" aria-hidden="true"></i>Test Login (Demo)
                 </button>
                 
                 <div class="auth-divider">
@@ -1451,30 +1089,42 @@
                 
                 <div class="text-center">
                     <span class="auth-link">Belum punya akun? </span>
-                    <a href="#" onclick="showRegister()" class="auth-link-primary text-decoration-none">Daftar Sekarang</a>
-                </div>
-                <div class="text-center mt-3">
-                    <a href="#" onclick="showBeranda()" class="auth-link small text-decoration-none">
-                        <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
-                    </a>
+                    <span class="auth-link-primary" onclick="showRegister()" tabindex="0" role="button">Daftar Sekarang</span>
                 </div>
             </form>
         </div>
+
+        <nav class="floating-taskbar glass-dark" role="navigation" aria-label="Auth navigation">
+            <button class="nav-button" onclick="showBeranda()" aria-label="Go to home">
+                <div class="nav-icon"><i class="bi bi-house" aria-hidden="true"></i></div>
+                <div class="nav-label">Beranda</div>
+            </button>
+            <button class="nav-button" onclick="toggleTheme()" aria-label="Toggle theme">
+                <div class="nav-icon"><i class="bi bi-moon-stars" id="themeIconLogin" aria-hidden="true"></i></div>
+                <div class="nav-label">Theme</div>
+            </button>
+            <button class="nav-button active" aria-label="Login page (current)">
+                <div class="nav-icon"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i></div>
+                <div class="nav-label">Masuk</div>
+            </button>
+            <button class="nav-button" onclick="showRegister()" aria-label="Go to register">
+                <div class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></div>
+                <div class="nav-label">Daftar</div>
+            </button>
+        </nav>
     </div>
 
+    <!-- Register Page -->
     <div id="registerPage" class="auth-container" style="display: none;">
-        <!-- Background Image Slider -->
-        <div class="auth-bg-slider">
+        <div class="auth-bg-slider" aria-hidden="true">
             <div class="auth-bg-slide active" style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1920&q=80');"></div>
             <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=1920&q=80');"></div>
             <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80');"></div>
-            <div class="auth-bg-slide" style="background-image: url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1920&q=80');"></div>
         </div>
         
-        <!-- Brand Section - Kiri -->
         <div class="auth-brand">
             <div class="auth-brand-logo">
-                <i class="bi bi-wind text-white" style="font-size: 3rem;"></i>
+                <i class="bi bi-wind text-white" style="font-size: 2.5rem;" aria-hidden="true"></i>
             </div>
             <h1 class="auth-brand-title">SONORA</h1>
             <p class="auth-brand-subtitle">
@@ -1483,62 +1133,54 @@
             <div class="auth-brand-features">
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-check-circle text-white"></i>
+                        <i class="bi bi-check-circle text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>100% Gratis</strong> — Tidak ada biaya berlangganan
                     </div>
                 </div>
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-cloud-check text-white"></i>
+                        <i class="bi bi-cloud-check text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>Sinkronisasi</strong> — Preset dan musik tersimpan di cloud
                     </div>
                 </div>
                 <div class="auth-feature-item">
                     <div class="auth-feature-icon">
-                        <i class="bi bi-headphones text-white"></i>
+                        <i class="bi bi-headphones text-white" aria-hidden="true"></i>
                     </div>
-                    <div class="auth-feature-text">
+                    <div class="text-secondary">
                         <strong>Kualitas Tinggi</strong> — Audio berkualitas studio
-                    </div>
-                </div>
-                <div class="auth-feature-item">
-                    <div class="auth-feature-icon">
-                        <i class="bi bi-device-hdd text-white"></i>
-                    </div>
-                    <div class="auth-feature-text">
-                        <strong>Unlimited</strong> — Upload musik tanpa batas
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Form Section - Kanan -->
         <div class="auth-box">
             <div class="auth-logo">
-                <i class="bi bi-person-plus text-white fs-1"></i>
+                <i class="bi bi-person-plus text-white fs-1" aria-hidden="true"></i>
             </div>
             <h2 class="auth-title">Buat Akun Baru</h2>
             <p class="auth-subtitle">Bergabung dengan SONORA sekarang</p>
 
-            <form onsubmit="handleRegister(event)">
+            <form onsubmit="handleRegister(event)" id="registerForm">
                 <div class="mb-3">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" id="registerName" placeholder="John Doe" required>
+                    <label class="form-label" for="registerName">Nama Lengkap</label>
+                    <input type="text" class="form-control" id="registerName" placeholder="John Doe" required minlength="3" autocomplete="name">
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" id="registerEmail" placeholder="nama@email.com" required>
+                    <label class="form-label" for="registerEmail">Email</label>
+                    <input type="email" class="form-control" id="registerEmail" placeholder="nama@email.com" required autocomplete="email">
                 </div>
                 <div class="mb-4">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required>
+                    <label class="form-label" for="registerPassword">Password</label>
+                    <input type="password" class="form-control" id="registerPassword" placeholder="••••••••" required minlength="6" autocomplete="new-password">
+                    <small class="text-muted">Minimal 6 karakter</small>
                 </div>
-                <button type="submit" class="btn btn-glass w-100 mb-3">
-                    <i class="bi bi-check-circle me-2"></i>Daftar
+                <button type="submit" class="btn btn-glass w-100 mb-3" id="registerBtn">
+                    <i class="bi bi-check-circle me-2" aria-hidden="true"></i>Daftar
                 </button>
                 
                 <div class="auth-divider">
@@ -1547,116 +1189,164 @@
                 
                 <div class="text-center">
                     <span class="auth-link">Sudah punya akun? </span>
-                    <a href="#" onclick="showLogin()" class="auth-link-primary text-decoration-none">Masuk</a>
-                </div>
-                <div class="text-center mt-3">
-                    <a href="#" onclick="showBeranda()" class="auth-link small text-decoration-none">
-                        <i class="bi bi-arrow-left-short"></i>Kembali ke Beranda
-                    </a>
+                    <span class="auth-link-primary" onclick="showLogin()" tabindex="0" role="button">Masuk</span>
                 </div>
             </form>
         </div>
+
+        <nav class="floating-taskbar glass-dark" role="navigation" aria-label="Auth navigation">
+            <button class="nav-button" onclick="showBeranda()" aria-label="Go to home">
+                <div class="nav-icon"><i class="bi bi-house" aria-hidden="true"></i></div>
+                <div class="nav-label">Beranda</div>
+            </button>
+            <button class="nav-button" onclick="toggleTheme()" aria-label="Toggle theme">
+                <div class="nav-icon"><i class="bi bi-moon-stars" id="themeIconRegister" aria-hidden="true"></i></div>
+                <div class="nav-label">Theme</div>
+            </button>
+            <button class="nav-button" onclick="showLogin()" aria-label="Go to login">
+                <div class="nav-icon"><i class="bi bi-box-arrow-in-right" aria-hidden="true"></i></div>
+                <div class="nav-label">Masuk</div>
+            </button>
+            <button class="nav-button active" aria-label="Register page (current)">
+                <div class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></div>
+                <div class="nav-label">Daftar</div>
+            </button>
+        </nav>
     </div>
 
+    <!-- Main App -->
     <div id="mainApp" style="display: none;">
-        <div class="container py-4">
-            <div class="sonora-header glass">
-                <div class="d-flex align-items-center justify-content-between flex-wrap">
-                    <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+        <div class="container py-4" style="padding-bottom: 100px;">
+            <header class="sonora-header glass">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                    <div class="d-flex align-items-center gap-3">
                         <div class="sonora-logo">
-                            <i class="bi bi-wind text-white"></i>
+                            <i class="bi bi-wind text-white" aria-hidden="true"></i>
                         </div>
                         <div>
-                            <h1 class="mb-0 text-white fw-bold">SONORA</h1>
-                            <p class="mb-0 text-white-muted small">Studio Suasana Relaksasi Spasial</p>
+                            <h1 class="mb-0 h4 text-primary fw-bold">SONORA</h1>
+                            <p class="mb-0 text-muted small">Studio Suasana Relaksasi Spasial</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
                         <div class="user-badge">
-                            <i class="bi bi-person-circle text-white me-2"></i>
-                            <span class="text-white fw-semibold" id="userName">User</span>
+                            <i class="bi bi-person-circle text-primary me-2" aria-hidden="true"></i>
+                            <span class="text-primary fw-semibold" id="userName">User</span>
                         </div>
-                        <button class="btn btn-glass-outline" onclick="handleLogout()">
-                            <i class="bi bi-box-arrow-right"></i>
+                        <button class="btn btn-glass-outline" onclick="handleLogout()" title="Logout" aria-label="Logout">
+                            <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
-            </div>
+            </header>
 
-            <div class="glass-dark rounded-4 p-4 mb-4">
-                <h5 class="text-white fw-semibold mb-3">
-                    <i class="bi bi-music-note-list me-2"></i>Musik Pribadi
-                </h5>
-                <p class="text-white-muted small mb-3">
-                    <i class="bi bi-lightbulb me-1"></i>
+            <section class="glass-dark rounded-4 p-4 mb-4" aria-labelledby="music-section-title">
+                <h2 id="music-section-title" class="h5 text-primary fw-semibold mb-3">
+                    <i class="bi bi-music-note-list me-2" aria-hidden="true"></i>Musik Pribadi
+                </h2>
+                <p class="text-muted small mb-3">
+                    <i class="bi bi-lightbulb me-1" aria-hidden="true"></i>
                     Upload file musik dari device Anda, atau gunakan musik demo yang sudah tersedia.
                 </p>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <input type="file" class="form-control" id="musicFile" accept="audio/*">
+                        <label for="musicFile" class="visually-hidden">Choose music file</label>
+                        <input type="file" class="form-control" id="musicFile" accept="audio/*" aria-label="Choose music file">
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-glass w-100" onclick="uploadMusic()">
-                            <i class="bi bi-upload me-2"></i>Upload
+                        <button class="btn btn-glass w-100" onclick="uploadMusic()" id="uploadBtn">
+                            <i class="bi bi-upload me-2" aria-hidden="true"></i>Upload
                         </button>
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-glass-outline w-100" onclick="showDemoMusicMenu()">
-                            <i class="bi bi-music-note-beamed me-2"></i>Demo
+                            <i class="bi bi-music-note-beamed me-2" aria-hidden="true"></i>Demo
                         </button>
                     </div>
                 </div>
-                <div id="musicList" class="mt-3"></div>
-            </div>
+                <div id="musicList" class="mt-3" role="list"></div>
+            </section>
 
-            <div class="glass-dark rounded-4 p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                    <h5 class="text-white fw-semibold mb-0">
-                        <i class="bi bi-alarm me-2"></i>Sleep Timer
-                    </h5>
-                    <div class="timer-display" id="timerDisplay">00:00</div>
+            <section class="glass-dark rounded-4 p-4 mb-4" aria-labelledby="timer-section-title">
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                    <h2 id="timer-section-title" class="h5 text-primary fw-semibold mb-0">
+                        <i class="bi bi-alarm me-2" aria-hidden="true"></i>Sleep Timer
+                    </h2>
+                    <div class="timer-display" id="timerDisplay" aria-live="polite">00:00</div>
                 </div>
-                <div class="d-flex gap-2 flex-wrap">
-                    <button class="btn btn-glass" onclick="setTimer(15)">15 min</button>
-                    <button class="btn btn-glass" onclick="setTimer(30)">30 min</button>
-                    <button class="btn btn-glass" onclick="setTimer(45)">45 min</button>
-                    <button class="btn btn-glass" onclick="setTimer(60)">60 min</button>
-                    <button class="btn btn-danger" onclick="stopTimer()" id="stopTimerBtn" style="display:none;">
-                        <i class="bi bi-x-circle"></i> Stop
+                <div class="d-flex gap-2 flex-wrap" role="group" aria-label="Timer controls">
+                    <button class="btn btn-glass" onclick="setTimer(15)" aria-label="Set timer for 15 minutes">15 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(30)" aria-label="Set timer for 30 minutes">30 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(45)" aria-label="Set timer for 45 minutes">45 min</button>
+                    <button class="btn btn-glass" onclick="setTimer(60)" aria-label="Set timer for 60 minutes">60 min</button>
+                    <button class="btn btn-danger" onclick="stopTimer()" id="stopTimerBtn" style="display:none;" aria-label="Stop timer">
+                        <i class="bi bi-x-circle" aria-hidden="true"></i> Stop
                     </button>
                 </div>
-            </div>
+            </section>
 
-            <div class="glass-dark rounded-4 p-4 mb-4">
-                <h5 class="text-white fw-semibold mb-3">
-                    <i class="bi bi-bookmarks me-2"></i>Preset Soundscape
-                </h5>
+            <section class="glass-dark rounded-4 p-4 mb-4" aria-labelledby="preset-section-title">
+                <h2 id="preset-section-title" class="h5 text-primary fw-semibold mb-3">
+                    <i class="bi bi-bookmarks me-2" aria-hidden="true"></i>Preset Soundscape
+                </h2>
                 <div class="row g-2 mb-3">
                     <div class="col-md-9">
+                        <label for="presetName" class="visually-hidden">Preset name</label>
                         <input type="text" class="form-control" id="presetName" placeholder="Nama preset (e.g., Fokus Belajar)">
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-glass w-100" onclick="savePreset()">
-                            <i class="bi bi-save me-2"></i>Simpan
+                            <i class="bi bi-save me-2" aria-hidden="true"></i>Simpan
                         </button>
                     </div>
                 </div>
-                <div id="presetList" class="d-flex gap-2 flex-wrap"></div>
-            </div>
+                <div id="presetList" class="d-flex gap-2 flex-wrap" role="list"></div>
+            </section>
 
-            <div class="row g-4 mb-4" id="soundChannels"></div>
+            <section aria-labelledby="channels-section-title">
+                <h2 id="channels-section-title" class="visually-hidden">Sound Channels</h2>
+                <div class="row g-4 mb-4" id="soundChannels" role="list"></div>
+            </section>
 
-            <div class="text-center mt-5 text-white-muted">
+            <footer class="text-center mt-5 text-muted">
                 <p class="mb-1">✨ Teknologi Rekayasa Multimedia - Politeknik Dewantara</p>
                 <p class="mb-1">Dikembangkan oleh Muhammad Zaky Zikra Nur (23404044)</p>
                 <p class="small">🎧 Gunakan headphone untuk pengalaman suara spasial 3D yang optimal</p>
-            </div>
+            </footer>
         </div>
+        
+        <nav class="floating-taskbar glass-dark" role="navigation" aria-label="Main navigation">
+            <button class="nav-button" onclick="toggleTheme()" aria-label="Toggle theme">
+                <div class="nav-icon"><i class="bi bi-moon-stars" id="themeIconMain" aria-hidden="true"></i></div>
+                <div class="nav-label">Theme</div>
+            </button>
+            <button class="nav-button" onclick="scrollToTop()" aria-label="Scroll to top">
+                <div class="nav-icon"><i class="bi bi-arrow-up-circle" aria-hidden="true"></i></div>
+                <div class="nav-label">Top</div>
+            </button>
+            <button class="nav-button" onclick="handleLogout()" aria-label="Logout">
+                <div class="nav-icon"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></div>
+                <div class="nav-label">Keluar</div>
+            </button>
+        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
+        'use strict';
+
+        // ===== CONFIGURATION =====
+        const CONFIG = {
+            MAX_FILE_SIZE: 5 * 1024 * 1024,
+            MAX_BASE64_SIZE: 6.7 * 1024 * 1024,
+            STORAGE_LIMIT: 4.5 * 1024 * 1024,
+            VALID_AUDIO_TYPES: ['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/aac'],
+            DEBOUNCE_DELAY: 50,
+            TOAST_DURATION: 3000,
+            MAX_TOASTS: 3,
+            AUDIO_VALIDATION_TIMEOUT: 10000
+        };
+
         const soundChannels = [
             { id: 'rain', name: 'Hujan', icon: '🌧️', color: '#60A5FA' },
             { id: 'thunder', name: 'Petir', icon: '⚡', color: '#A78BFA' },
@@ -1665,9 +1355,10 @@
             { id: 'wind', name: 'Angin', icon: '💨', color: '#34D399' },
             { id: 'forest', name: 'Hutan', icon: '🌲', color: '#10B981' },
             { id: 'night', name: 'Malam', icon: '🌙', color: '#818CF8' },
-            { id: 'cafe', name: 'Kafe', icon: '☕', color: '#FB923C' },
+            { id: 'cafe', name: 'Kafe', icon: '☕', color: '#FB923C' }
         ];
 
+        // ===== STATE =====
         let currentUser = null;
         let audioContext = null;
         let audioPlayers = {};
@@ -1678,16 +1369,382 @@
         let presets = [];
         let isLightMode = false;
 
+        // Debounce timers
+        const debounceTimers = {
+            volume: {},
+            spatial: {},
+            music: {}
+        };
+
+        // Toast queue
+        const toastQueue = [];
+
+        // ===== UTILITIES =====
+        async function hashPassword(password) {
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(password);
+                const hash = await crypto.subtle.digest('SHA-256', data);
+                return Array.from(new Uint8Array(hash))
+                    .map(b => b.toString(16).padStart(2, '0'))
+                    .join('');
+            } catch (error) {
+                console.error('Hash error:', error);
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash;
+                }
+                return hash.toString(36);
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            
+            if (toastQueue.length >= CONFIG.MAX_TOASTS) {
+                const oldest = toastQueue.shift();
+                if (oldest && oldest.parentNode) {
+                    oldest.remove();
+                }
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast-notification ${type}`;
+            toast.setAttribute('role', 'alert');
+            toast.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'x-circle' : 'info-circle'} fs-5" aria-hidden="true"></i>
+                <div class="flex-grow-1">
+                    <p class="mb-0 text-primary fw-semibold" style="font-size: 0.9rem;">${message}</p>
+                </div>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: var(--text-primary); opacity: 0.7; cursor: pointer; padding: 0 0 0 10px;" aria-label="Close notification">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            toastQueue.push(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                        const index = toastQueue.indexOf(toast);
+                        if (index > -1) toastQueue.splice(index, 1);
+                    }
+                }, 300);
+            }, CONFIG.TOAST_DURATION);
+        }
+
+        const Storage = {
+            set(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                    return true;
+                } catch (error) {
+                    console.error('Storage set error:', error);
+                    showToast('Gagal menyimpan data', 'error');
+                    return false;
+                }
+            },
+            
+            get(key, defaultValue = null) {
+                try {
+                    const item = localStorage.getItem(key);
+                    if (!item) return defaultValue;
+                    
+                    try {
+                        return JSON.parse(item);
+                    } catch (parseError) {
+                        if (key === 'sonoraTheme' && (item === 'light' || item === 'dark')) {
+                            return item;
+                        }
+                        console.warn(`Storage key "${key}" contains invalid data`);
+                        return defaultValue;
+                    }
+                } catch (error) {
+                    console.error('Storage get error:', error);
+                    return defaultValue;
+                }
+            },
+            
+            remove(key) {
+                try {
+                    localStorage.removeItem(key);
+                    return true;
+                } catch (error) {
+                    console.error('Storage remove error:', error);
+                    return false;
+                }
+            },
+
+            getUsage() {
+                let total = 0;
+                for (let key in localStorage) {
+                    if (key.startsWith('sonora')) {
+                        total += localStorage[key].length + key.length;
+                    }
+                }
+                return total;
+            }
+        };
+
+        // ===== AUDIO CONTEXT =====
         function initAudioContext() {
             if (!audioContext) {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                try {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('✅ AudioContext created');
+                } catch (error) {
+                    console.error('AudioContext init failed:', error);
+                    showToast('Audio tidak didukung di browser ini', 'error');
+                    return null;
+                }
             }
+            
             if (audioContext.state === 'suspended') {
-                audioContext.resume();
+                audioContext.resume().then(() => {
+                    console.log('✅ AudioContext resumed');
+                }).catch(err => {
+                    console.error('Resume failed:', err);
+                });
             }
+            
             return audioContext;
         }
 
+        function cleanupAudio() {
+            console.log('🧹 Cleaning up audio...');
+            
+            // Stop ambient sounds
+            Object.keys(audioPlayers).forEach(channelId => {
+                const player = audioPlayers[channelId];
+                try {
+                    if (player.noiseGenerators) {
+                        player.noiseGenerators.forEach(gen => {
+                            try { gen.stop(); gen.disconnect(); } catch(e) {}
+                        });
+                    }
+                    if (player.masterGain) player.masterGain.disconnect();
+                    if (player.masterFilter) player.masterFilter.disconnect();
+                    if (player.spatialPanner) player.spatialPanner.disconnect();
+                    
+                    const btn = document.getElementById(`playBtn-${channelId}`);
+                    if (btn) {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                    }
+                } catch (error) {
+                    console.error('Error stopping ambient:', error);
+                }
+            });
+            audioPlayers = {};
+            
+            // Stop music
+            Object.keys(musicPlayers).forEach(musicId => {
+                const player = musicPlayers[musicId];
+                try {
+                    if (player.oscillators) {
+                        player.oscillators.forEach(osc => {
+                            try { osc.stop(); osc.disconnect(); } catch(e) {}
+                        });
+                    }
+                    if (player.gainNode) player.gainNode.disconnect();
+                    if (player.pause) {
+                        player.pause();
+                        player.currentTime = 0;
+                        player.src = '';
+                    }
+                    
+                    const btn = document.getElementById(`musicBtn-${musicId}`);
+                    if (btn) {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                    }
+                } catch (error) {
+                    console.error('Error stopping music:', error);
+                }
+            });
+            musicPlayers = {};
+            
+            // Clear timers
+            Object.values(debounceTimers).forEach(timerGroup => {
+                Object.values(timerGroup).forEach(timer => {
+                    if (timer) clearTimeout(timer);
+                });
+            });
+            debounceTimers.volume = {};
+            debounceTimers.spatial = {};
+            debounceTimers.music = {};
+            
+            // Close context
+            if (audioContext && audioContext.state !== 'closed') {
+                try {
+                    audioContext.close();
+                    console.log('✅ AudioContext closed');
+                } catch (error) {
+                    console.error('Error closing AudioContext:', error);
+                }
+                audioContext = null;
+            }
+            
+            console.log('✅ Cleanup complete');
+        }
+
+        // ===== AUTHENTICATION =====
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (!email || !password) {
+                showToast('Email dan password harus diisi', 'error');
+                return;
+            }
+            
+            const originalHTML = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<span class="loading-spinner me-2"></span>Memproses...';
+            loginBtn.disabled = true;
+            
+            try {
+                const hashedPassword = await hashPassword(password);
+                const users = Storage.get('sonoraUsers', []);
+                
+                const user = users.find(u => u.email === email && u.password === hashedPassword);
+                
+                if (user) {
+                    currentUser = user;
+                    Storage.set('sonoraCurrentUser', user);
+                    
+                    showToast(`Selamat datang, ${user.name}! 🎉`, 'success');
+                    
+                    setTimeout(() => {
+                        loadUserData();
+                        showMainApp();
+                    }, 500);
+                } else {
+                    showToast('Email atau password salah!', 'error');
+                    loginBtn.innerHTML = originalHTML;
+                    loginBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Terjadi kesalahan saat login', 'error');
+                loginBtn.innerHTML = originalHTML;
+                loginBtn.disabled = false;
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            
+            if (name.length < 3) {
+                showToast('Nama minimal 3 karakter', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showToast('Password minimal 6 karakter', 'error');
+                return;
+            }
+            
+            const originalHTML = registerBtn.innerHTML;
+            registerBtn.innerHTML = '<span class="loading-spinner me-2"></span>Mendaftar...';
+            registerBtn.disabled = true;
+            
+            try {
+                const users = Storage.get('sonoraUsers', []);
+                
+                if (users.find(u => u.email === email)) {
+                    showToast('Email sudah terdaftar!', 'error');
+                    registerBtn.innerHTML = originalHTML;
+                    registerBtn.disabled = false;
+                    return;
+                }
+                
+                const hashedPassword = await hashPassword(password);
+                
+                const newUser = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    password: hashedPassword,
+                    music: [],
+                    presets: [],
+                    createdAt: new Date().toISOString()
+                };
+                
+                users.push(newUser);
+                Storage.set('sonoraUsers', users);
+                
+                showToast('Registrasi berhasil! Silakan login 🎉', 'success');
+                
+                setTimeout(() => {
+                    showLogin();
+                    document.getElementById('loginEmail').value = email;
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Register error:', error);
+                showToast('Terjadi kesalahan saat registrasi', 'error');
+                registerBtn.innerHTML = originalHTML;
+                registerBtn.disabled = false;
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const users = Storage.get('sonoraUsers', []);
+                let demoUser = users.find(u => u.email === 'demo@sonora.com');
+                
+                if (!demoUser) {
+                    const hashedPassword = await hashPassword('demo123');
+                    demoUser = {
+                        id: Date.now(),
+                        name: 'Demo User',
+                        email: 'demo@sonora.com',
+                        password: hashedPassword,
+                        music: [],
+                        presets: [],
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(demoUser);
+                    Storage.set('sonoraUsers', users);
+                    console.log('✅ Demo user created');
+                }
+                
+                document.getElementById('loginEmail').value = 'demo@sonora.com';
+                document.getElementById('loginPassword').value = 'demo123';
+                showToast('Demo account loaded! Klik "Masuk" untuk login.', 'info');
+            } catch (error) {
+                console.error('Test login error:', error);
+                showToast('Gagal membuat demo user', 'error');
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Yakin ingin keluar?')) {
+                cleanupAudio();
+                stopTimer();
+                Storage.remove('sonoraCurrentUser');
+                currentUser = null;
+                userMusic = [];
+                presets = [];
+                showToast('Berhasil logout. Sampai jumpa! 👋', 'success');
+                setTimeout(showBeranda, 500);
+            }
+        }
+
+        // ===== NAVIGATION =====
         function showBeranda() {
             document.getElementById('berandaPage').style.display = 'block';
             document.getElementById('loginPage').style.display = 'none';
@@ -1695,126 +1752,18 @@
             document.getElementById('mainApp').style.display = 'none';
         }
 
-        function testLogin() {
-            // Buat user demo jika belum ada
-            try {
-                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
-                const demoUser = users.find(u => u.email === 'demo@sonora.com');
-                
-                if (!demoUser) {
-                    const newDemoUser = {
-                        id: Date.now(),
-                        name: 'Demo User',
-                        email: 'demo@sonora.com',
-                        password: 'demo123',
-                        music: [],
-                        presets: []
-                    };
-                    users.push(newDemoUser);
-                    localStorage.setItem('sonoraUsers', JSON.stringify(users));
-                    console.log('Demo user created');
-                }
-                
-                // Auto login sebagai demo user
-                document.getElementById('loginEmail').value = 'demo@sonora.com';
-                document.getElementById('loginPassword').value = 'demo123';
-                alert('Demo account loaded!\nEmail: demo@sonora.com\nPassword: demo123\n\nKlik "Masuk" untuk login.');
-            } catch (error) {
-                console.error('Test login error:', error);
-                alert('Error: ' + error.message);
-            }
-        }
-
         function showLogin() {
             document.getElementById('berandaPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'flex';
             document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
         }
 
         function showRegister() {
             document.getElementById('berandaPage').style.display = 'none';
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('registerPage').style.display = 'flex';
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-
-            console.log('Login attempt:', email); // Debug log
-
-            try {
-                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
-                console.log('Users found:', users.length); // Debug log
-                
-                const user = users.find(u => u.email === email && u.password === password);
-
-                if (user) {
-                    currentUser = user;
-                    localStorage.setItem('sonoraCurrentUser', JSON.stringify(user));
-                    console.log('Login successful'); // Debug log
-                    loadUserData();
-                    showMainApp();
-                } else {
-                    console.log('User not found'); // Debug log
-                    alert('Email atau password salah! Silakan daftar terlebih dahulu jika belum memiliki akun.');
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('Terjadi kesalahan saat login: ' + error.message);
-            }
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('registerName').value;
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-
-            console.log('Register attempt:', email); // Debug log
-
-            try {
-                const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
-                console.log('Current users:', users.length); // Debug log
-
-                if (users.find(u => u.email === email)) {
-                    alert('Email sudah terdaftar! Silakan login.');
-                    return;
-                }
-
-                const newUser = {
-                    id: Date.now(),
-                    name: name,
-                    email: email,
-                    password: password,
-                    music: [],
-                    presets: []
-                };
-
-                users.push(newUser);
-                localStorage.setItem('sonoraUsers', JSON.stringify(users));
-                console.log('User registered successfully'); // Debug log
-
-                alert('Registrasi berhasil! Silakan login.');
-                showLogin();
-                
-                // Auto-fill email di login form
-                document.getElementById('loginEmail').value = email;
-            } catch (error) {
-                console.error('Register error:', error);
-                alert('Terjadi kesalahan saat registrasi: ' + error.message);
-            }
-        }
-
-        function handleLogout() {
-            if (confirm('Yakin ingin keluar?')) {
-                stopAllSounds();
-                stopAllMusic();
-                localStorage.removeItem('sonoraCurrentUser');
-                currentUser = null;
-                showBeranda();
-            }
+            document.getElementById('mainApp').style.display = 'none';
         }
 
         function showMainApp() {
@@ -1824,13 +1773,14 @@
             document.getElementById('mainApp').style.display = 'block';
             document.getElementById('userName').textContent = currentUser.name;
             
+            updateThemeIcons();
             renderChannels();
             renderMusicList();
             renderPresets();
         }
 
         function loadUserData() {
-            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            const users = Storage.get('sonoraUsers', []);
             const user = users.find(u => u.id === currentUser.id);
             if (user) {
                 currentUser = user;
@@ -1840,92 +1790,141 @@
         }
 
         function saveUserData() {
-            const users = JSON.parse(localStorage.getItem('sonoraUsers') || '[]');
+            const users = Storage.get('sonoraUsers', []);
             const index = users.findIndex(u => u.id === currentUser.id);
             if (index !== -1) {
+                currentUser.music = userMusic;
+                currentUser.presets = presets;
                 users[index] = currentUser;
-                localStorage.setItem('sonoraUsers', JSON.stringify(users));
+                Storage.set('sonoraUsers', users);
             }
         }
 
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== THEME =====
         function toggleTheme() {
             isLightMode = !isLightMode;
-            const body = document.body;
-            const themeIcon = document.getElementById('themeIcon');
+            document.body.classList.toggle('light-mode', isLightMode);
             
-            if (isLightMode) {
-                body.classList.add('light-mode');
-                themeIcon.classList.remove('bi-moon-stars');
-                themeIcon.classList.add('bi-sun');
-            } else {
-                body.classList.remove('light-mode');
-                themeIcon.classList.remove('bi-sun');
-                themeIcon.classList.add('bi-moon-stars');
+            updateThemeIcons();
+            Storage.set('sonoraTheme', isLightMode ? 'light' : 'dark');
+        }
+
+        function updateThemeIcons() {
+            const themeIcons = document.querySelectorAll('[id^="themeIcon"]');
+            themeIcons.forEach(icon => {
+                if (icon) {
+                    icon.classList.toggle('bi-moon-stars', !isLightMode);
+                    icon.classList.toggle('bi-sun', isLightMode);
+                }
+            });
+        }
+
+        // ===== MUSIC MANAGEMENT =====
+        async function uploadMusic() {
+            const fileInput = document.getElementById('musicFile');
+            const file = fileInput.files[0];
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            if (!file) {
+                showToast('Pilih file musik terlebih dahulu!', 'error');
+                return;
+            }
+
+            if (!CONFIG.VALID_AUDIO_TYPES.includes(file.type)) {
+                showToast('Format tidak didukung! Gunakan MP3, WAV, OGG, atau M4A.', 'error');
+                return;
+            }
+
+            if (file.size > CONFIG.MAX_FILE_SIZE) {
+                const maxMB = (CONFIG.MAX_FILE_SIZE / 1024 / 1024).toFixed(1);
+                const fileMB = (file.size / 1024 / 1024).toFixed(1);
+                showToast(`File terlalu besar! Maksimal ${maxMB}MB. File Anda: ${fileMB}MB`, 'error');
+                return;
+            }
+
+            const currentStorage = Storage.getUsage();
+            const estimatedSize = file.size * 1.37;
+
+            if (currentStorage + estimatedSize > CONFIG.STORAGE_LIMIT) {
+                showToast('Storage penuh! Hapus beberapa musik untuk menambah yang baru.', 'error');
+                return;
+            }
+
+            const originalHTML = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<span class="loading-spinner me-2"></span>Uploading...';
+            uploadBtn.disabled = true;
+
+            try {
+                const base64 = await readFileAsBase64(file);
+                await validateAudioFile(base64, file.size);
+                
+                const musicData = {
+                    id: Date.now(),
+                    name: file.name,
+                    data: base64,
+                    type: file.type,
+                    isDemo: false,
+                    uploadedAt: new Date().toISOString()
+                };
+
+                userMusic.push(musicData);
+                saveUserData();
+                renderMusicList();
+                fileInput.value = '';
+                
+                showToast(`✅ ${file.name} berhasil diupload!`, 'success');
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast(`Gagal upload: ${error.message}`, 'error');
+            } finally {
+                uploadBtn.innerHTML = originalHTML;
+                uploadBtn.disabled = false;
             }
         }
 
-        function uploadMusic() {
-            const fileInput = document.getElementById('musicFile');
-            const file = fileInput.files[0];
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = () => reject(new Error('Gagal membaca file'));
+                reader.readAsDataURL(file);
+            });
+        }
 
-            if (!file) {
-                alert('📂 Pilih file musik terlebih dahulu!');
-                return;
-            }
-
-            console.log('Uploading file:', file.name, file.type, file.size);
-
-            // Cek ukuran file (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('❌ File terlalu besar! Maksimal 10MB.');
-                return;
-            }
-
-            // Show loading feedback
-            const uploadBtn = event.target;
-            const originalText = uploadBtn.innerHTML;
-            uploadBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Uploading...';
-            uploadBtn.disabled = true;
-
-            const reader = new FileReader();
-            
-            reader.onerror = function(error) {
-                console.error('FileReader error:', error);
-                alert('❌ Gagal membaca file. Silakan coba lagi.');
-                uploadBtn.innerHTML = originalText;
-                uploadBtn.disabled = false;
-            };
-            
-            reader.onload = function (e) {
-                try {
-                    console.log('File read successful, size:', e.target.result.length);
-                    
-                    const musicData = {
-                        id: Date.now(),
-                        name: file.name,
-                        data: e.target.result,
-                        type: file.type,
-                        isDemo: false
-                    };
-
-                    userMusic.push(musicData);
-                    currentUser.music = userMusic;
-                    saveUserData();
-
-                    renderMusicList();
-                    fileInput.value = '';
-                    alert('✅ Musik berhasil diupload!\n\n🎵 ' + file.name);
-                    console.log('Music saved successfully');
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    alert('❌ Gagal menyimpan musik: ' + error.message);
-                } finally {
-                    uploadBtn.innerHTML = originalText;
-                    uploadBtn.disabled = false;
-                }
-            };
-            
-            reader.readAsDataURL(file);
+        function validateAudioFile(base64, fileSize) {
+            return new Promise((resolve, reject) => {
+                const audio = new Audio(base64);
+                const timeoutDuration = Math.max(CONFIG.AUDIO_VALIDATION_TIMEOUT, (fileSize / 1024 / 1024) * 2000);
+                
+                const timeoutId = setTimeout(() => {
+                    audio.src = '';
+                    reject(new Error('File audio tidak valid atau corrupt'));
+                }, timeoutDuration);
+                
+                audio.onloadedmetadata = () => {
+                    clearTimeout(timeoutId);
+                    if (audio.duration && audio.duration > 0 && audio.duration < Infinity) {
+                        audio.src = '';
+                        resolve();
+                    } else {
+                        audio.src = '';
+                        reject(new Error('File audio tidak memiliki metadata yang valid'));
+                    }
+                };
+                
+                audio.onerror = () => {
+                    clearTimeout(timeoutId);
+                    audio.src = '';
+                    reject(new Error('File audio tidak dapat diputar'));
+                };
+                
+                audio.load();
+            });
         }
 
         function showDemoMusicMenu() {
@@ -1949,58 +1948,59 @@
             if (index >= 0 && index < demoOptions.length) {
                 addDemoMusic(demoOptions[index].name, demoOptions[index].type);
             } else if (choice !== null) {
-                alert('❌ Pilihan tidak valid. Pilih nomor 1-5.');
+                showToast('Pilihan tidak valid. Pilih nomor 1-5.', 'error');
             }
         }
 
         function addDemoMusic(name, type) {
-            console.log('Adding demo music:', name, type);
-            
             const demoMusic = {
                 id: Date.now(),
-                name: name || '🎵 Musik Demo - Relaxing Tone',
+                name: name,
                 data: null,
                 type: 'demo',
                 isDemo: true,
-                demoType: type || 'default'
+                demoType: type,
+                addedAt: new Date().toISOString()
             };
 
             userMusic.push(demoMusic);
-            currentUser.music = userMusic;
             saveUserData();
             renderMusicList();
             
-            alert('✅ Musik demo ditambahkan!\n\n' + demoMusic.name + '\n\n▶️ Klik tombol Play untuk mendengarkan.');
+            showToast(`✅ ${name} ditambahkan!`, 'success');
         }
 
         function renderMusicList() {
             const container = document.getElementById('musicList');
             if (userMusic.length === 0) {
-                container.innerHTML = '<p class="text-white-muted text-center small mb-0">Belum ada musik yang diupload</p>';
+                container.innerHTML = '<p class="text-muted text-center small mb-0">Belum ada musik yang diupload</p>';
                 return;
             }
 
             container.innerHTML = userMusic.map(music => `
-                <div class="music-item d-flex align-items-center justify-content-between">
+                <div class="music-item d-flex align-items-center justify-content-between flex-wrap gap-2" role="listitem">
                     <div class="d-flex align-items-center gap-3">
-                        <button class="btn play-btn p-2" style="width: 40px; height: 40px;" 
-                                id="musicBtn-${music.id}" onclick="toggleMusic(${music.id})">
-                            <i class="bi bi-play-fill"></i>
+                        <button class="play-btn" style="width: 40px; height: 40px; font-size: 1rem;"
+                                id="musicBtn-${music.id}" onclick="toggleMusic(${music.id})" 
+                                aria-label="${music.name} - Play/Pause">
+                            <i class="bi bi-play-fill" aria-hidden="true"></i>
                         </button>
                         <div>
-                            <p class="mb-0 text-white fw-semibold">${music.name}</p>
-                            <p class="mb-0 text-white-muted small">
+                            <p class="mb-0 text-primary fw-semibold">${music.name}</p>
+                            <p class="mb-0 text-muted small">
                                 ${music.isDemo ? 
                                     '<span class="badge" style="background: rgba(96, 165, 250, 0.3); color: #60A5FA;">Web Audio API</span>' : 
-                                    'Musik Pribadi'}
+                                    '<span class="badge" style="background: rgba(34, 197, 94, 0.3); color: #22C55E;">Musik Pribadi</span>'}
                             </p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
+                        <label for="musicVolume-${music.id}" class="visually-hidden">Volume for ${music.name}</label>
                         <input type="range" class="form-range" style="width: 100px;" min="0" max="100" value="50"
-                               id="musicVolume-${music.id}" oninput="updateMusicVolume(${music.id}, this.value)">
-                        <button class="btn btn-danger btn-sm" onclick="deleteMusic(${music.id})">
-                            <i class="bi bi-trash"></i>
+                               id="musicVolume-${music.id}" oninput="updateMusicVolume(${music.id}, this.value)"
+                               aria-label="Volume control">
+                        <button class="btn btn-danger btn-sm" onclick="deleteMusic(${music.id})" aria-label="Delete ${music.name}">
+                            <i class="bi bi-trash" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -2011,194 +2011,169 @@
             const music = userMusic.find(m => m.id === musicId);
             const btn = document.getElementById(`musicBtn-${musicId}`);
 
+            if (!music) return;
+
             if (musicPlayers[musicId]) {
-                if (music.isDemo) {
-                    const player = musicPlayers[musicId];
-                    if (player.oscillators) {
-                        player.oscillators.forEach(osc => osc.stop());
-                    }
-                    if (player.gainNode) {
-                        player.gainNode.disconnect();
-                    }
-                } else {
-                    musicPlayers[musicId].pause();
-                    musicPlayers[musicId].currentTime = 0;
-                }
-                delete musicPlayers[musicId];
+                stopMusic(musicId);
                 btn.classList.remove('active');
                 btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                btn.setAttribute('aria-label', `${music.name} - Play`);
             } else {
-                if (music.isDemo) {
-                    console.log('Playing demo music:', music.demoType);
-                    
-                    const ctx = initAudioContext();
-                    const gainNode = ctx.createGain();
-                    gainNode.gain.value = 0.3;
-                    gainNode.connect(ctx.destination);
-                    
-                    const oscillators = [];
-                    
-                    // Different sounds based on type
-                    let frequencies = [];
-                    let waveType = 'sine';
-                    
-                    switch(music.demoType) {
-                        case 'piano':
-                            frequencies = [261.63, 329.63, 392.00, 493.88]; // C Major 7th
-                            waveType = 'triangle';
-                            break;
-                        case 'guitar':
-                            frequencies = [196.00, 246.94, 293.66, 369.99]; // G Major 7th
-                            waveType = 'sawtooth';
-                            break;
-                        case 'chimes':
-                            frequencies = [523.25, 659.25, 783.99, 987.77]; // High C Major 7th
-                            waveType = 'sine';
-                            break;
-                        case 'strings':
-                            frequencies = [220.00, 277.18, 329.63, 440.00]; // A Major 7th
-                            waveType = 'sawtooth';
-                            break;
-                        case 'lofi':
-                            frequencies = [146.83, 185.00, 220.00, 293.66]; // D Major 7th
-                            waveType = 'square';
-                            break;
-                        default:
-                            frequencies = [261.63, 329.63, 392.00, 493.88];
-                            waveType = 'sine';
+                try {
+                    if (music.isDemo) {
+                        playDemoMusic(musicId, music.demoType);
+                    } else {
+                        playRegularMusic(musicId, music.data);
                     }
                     
-                    frequencies.forEach((freq, index) => {
-                        const osc = ctx.createOscillator();
-                        osc.type = waveType;
-                        osc.frequency.value = freq;
-                        
-                        const oscGain = ctx.createGain();
-                        oscGain.gain.value = 0.15;
-                        
-                        // Add LFO for movement
-                        const lfo = ctx.createOscillator();
-                        lfo.frequency.value = 0.3 + (index * 0.1);
-                        const lfoGain = ctx.createGain();
-                        lfoGain.gain.value = 1.5;
-                        lfo.connect(lfoGain);
-                        lfoGain.connect(osc.frequency);
-                        
-                        osc.connect(oscGain);
-                        oscGain.connect(gainNode);
-                        osc.start();
-                        lfo.start();
-                        
-                        oscillators.push(osc);
-                        oscillators.push(lfo);
-                    });
-                    
-                    musicPlayers[musicId] = { oscillators, gainNode, ctx };
-                    
-                } else {
-                    const audio = new Audio(music.data);
-                    audio.loop = true;
-                    audio.volume = 0.5;
-                    
-                    audio.play().catch(error => {
-                        console.error('Error playing music:', error);
-                        alert('❌ Gagal memutar musik: ' + error.message);
-                        return;
-                    });
+                    const volumeSlider = document.getElementById(`musicVolume-${musicId}`);
+                    if (volumeSlider) {
+                        updateMusicVolume(musicId, volumeSlider.value);
+                    }
 
-                    musicPlayers[musicId] = audio;
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+                    btn.setAttribute('aria-label', `${music.name} - Pause`);
+                } catch (error) {
+                    console.error('Error playing music:', error);
+                    showToast('Gagal memutar musik', 'error');
                 }
-                
-                const volumeSlider = document.getElementById(`musicVolume-${musicId}`);
-                if (volumeSlider) {
-                    updateMusicVolume(musicId, volumeSlider.value);
-                }
-
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
             }
+        }
+
+        function playDemoMusic(musicId, demoType) {
+            const ctx = initAudioContext();
+            if (!ctx) return;
+            
+            const gainNode = ctx.createGain();
+            gainNode.gain.value = 0.3;
+            gainNode.connect(ctx.destination);
+            
+            const oscillators = [];
+            const config = getDemoMusicConfig(demoType);
+            
+            config.frequencies.forEach((freq, index) => {
+                const osc = ctx.createOscillator();
+                osc.type = config.waveType;
+                osc.frequency.value = freq;
+                
+                const oscGain = ctx.createGain();
+                oscGain.gain.value = 0.15;
+                
+                const lfo = ctx.createOscillator();
+                lfo.frequency.value = 0.3 + (index * 0.1);
+                const lfoGain = ctx.createGain();
+                lfoGain.gain.value = 1.5;
+                
+                lfo.connect(lfoGain);
+                lfoGain.connect(osc.frequency);
+                
+                osc.connect(oscGain);
+                oscGain.connect(gainNode);
+                
+                osc.start();
+                lfo.start();
+                
+                oscillators.push(osc, lfo);
+            });
+            
+            musicPlayers[musicId] = { oscillators, gainNode, ctx, isDemo: true };
+        }
+
+        function playRegularMusic(musicId, data) {
+            const audio = new Audio(data);
+            audio.loop = true;
+            audio.volume = 0.5;
+            
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+                showToast('Gagal memutar musik', 'error');
+                throw error;
+            });
+
+            musicPlayers[musicId] = audio;
+        }
+
+        function stopMusic(musicId) {
+            const music = userMusic.find(m => m.id === musicId);
+            const player = musicPlayers[musicId];
+            
+            if (!player) return;
+            
+            try {
+                if (music && music.isDemo) {
+                    if (player.oscillators) {
+                        player.oscillators.forEach(osc => {
+                            try { osc.stop(); osc.disconnect(); } catch(e) {}
+                        });
+                    }
+                    if (player.gainNode) player.gainNode.disconnect();
+                } else {
+                    player.pause();
+                    player.currentTime = 0;
+                }
+                delete musicPlayers[musicId];
+            } catch (error) {
+                console.error('Error stopping music:', error);
+            }
+        }
+
+        function getDemoMusicConfig(type) {
+            const configs = {
+                'piano': { frequencies: [261.63, 329.63, 392.00, 493.88], waveType: 'triangle' },
+                'guitar': { frequencies: [196.00, 246.94, 293.66, 369.99], waveType: 'sawtooth' },
+                'chimes': { frequencies: [523.25, 659.25, 783.99, 987.77], waveType: 'sine' },
+                'strings': { frequencies: [220.00, 277.18, 329.63, 440.00], waveType: 'sawtooth' },
+                'lofi': { frequencies: [146.83, 185.00, 220.00, 293.66], waveType: 'square' }
+            };
+            return configs[type] || configs.piano;
         }
 
         function updateMusicVolume(musicId, value) {
-            const music = userMusic.find(m => m.id === musicId);
-            if (musicPlayers[musicId]) {
-                const volume = value / 100;
-                if (music && music.isDemo) {
-                    // Demo music (Web Audio API)
-                    if (musicPlayers[musicId].gainNode) {
-                        musicPlayers[musicId].gainNode.gain.value = volume * 0.3;
-                    }
-                } else {
-                    // Regular music (HTML5 Audio)
-                    musicPlayers[musicId].volume = volume;
-                }
+            if (debounceTimers.music[musicId]) {
+                clearTimeout(debounceTimers.music[musicId]);
             }
+            
+            debounceTimers.music[musicId] = setTimeout(() => {
+                const music = userMusic.find(m => m.id === musicId);
+                const player = musicPlayers[musicId];
+                
+                if (!player) return;
+                
+                const volume = value / 100;
+                
+                if (music && music.isDemo) {
+                    if (player.gainNode) player.gainNode.gain.value = volume * 0.3;
+                } else {
+                    player.volume = volume;
+                }
+            }, CONFIG.DEBOUNCE_DELAY);
         }
 
         function deleteMusic(musicId) {
-            if (confirm('Hapus musik ini?')) {
-                const music = userMusic.find(m => m.id === musicId);
-                
-                if (musicPlayers[musicId]) {
-                    if (music && music.isDemo) {
-                        // Stop demo music
-                        const player = musicPlayers[musicId];
-                        if (player.oscillators) {
-                            player.oscillators.forEach(osc => osc.stop());
-                        }
-                        if (player.gainNode) {
-                            player.gainNode.disconnect();
-                        }
-                    } else {
-                        // Stop regular music
-                        musicPlayers[musicId].pause();
-                    }
-                    delete musicPlayers[musicId];
-                }
-                
-                userMusic = userMusic.filter(m => m.id !== musicId);
-                currentUser.music = userMusic;
-                saveUserData();
-                renderMusicList();
-            }
+            if (!confirm('Hapus musik ini?')) return;
+            
+            stopMusic(musicId);
+            userMusic = userMusic.filter(m => m.id !== musicId);
+            saveUserData();
+            renderMusicList();
+            showToast('Musik berhasil dihapus', 'success');
         }
 
-        function stopAllMusic() {
-            Object.keys(musicPlayers).forEach(musicId => {
-                const music = userMusic.find(m => m.id == musicId);
-                if (musicPlayers[musicId]) {
-                    if (music && music.isDemo) {
-                        // Stop demo music
-                        const player = musicPlayers[musicId];
-                        if (player.oscillators) {
-                            player.oscillators.forEach(osc => {
-                                try { osc.stop(); } catch(e) {}
-                            });
-                        }
-                        if (player.gainNode) {
-                            try { player.gainNode.disconnect(); } catch(e) {}
-                        }
-                    } else {
-                        // Stop regular music
-                        try {
-                            musicPlayers[musicId].pause();
-                        } catch(e) {}
-                    }
-                }
-            });
-            musicPlayers = {};
-        }
-
+        // ===== AMBIENT SOUND =====
         function createAmbientSound(channelId) {
             const ctx = initAudioContext();
-            const noiseGenerators = [];
+            if (!ctx) return null;
+            
             const masterGain = ctx.createGain();
             masterGain.gain.value = 0.5;
             
             const spatialPanner = ctx.createPanner();
             spatialPanner.panningModel = 'HRTF';
             spatialPanner.distanceModel = 'linear';
-            spatialPanner.setPosition(0, 0, -1);
+            spatialPanner.positionX.value = 0;
+            spatialPanner.positionY.value = 0;
+            spatialPanner.positionZ.value = -1;
             
             const masterFilter = ctx.createBiquadFilter();
             masterFilter.type = 'lowpass';
@@ -2208,8 +2183,9 @@
             masterFilter.connect(spatialPanner);
             spatialPanner.connect(ctx.destination);
             
+            const noiseGenerators = [];
             for (let i = 0; i < 2; i++) {
-                const noise = createNoiseBuffer(ctx, 'pink');
+                const noise = createNoiseBuffer(ctx);
                 const gain = ctx.createGain();
                 gain.gain.value = 0.3;
                 const filter = ctx.createBiquadFilter();
@@ -2226,7 +2202,7 @@
             return { noiseGenerators, masterGain, masterFilter, spatialPanner };
         }
 
-        function createNoiseBuffer(ctx, type) {
+        function createNoiseBuffer(ctx) {
             const bufferSize = ctx.sampleRate * 2;
             const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
             const output = buffer.getChannelData(0);
@@ -2254,51 +2230,56 @@
         function renderChannels() {
             const container = document.getElementById('soundChannels');
             container.innerHTML = soundChannels.map(channel => `
-                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                    <div class="card-channel glass-dark border-accent h-100" style="border-color: ${channel.color};">
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3" role="listitem">
+                    <div class="card-channel glass-dark h-100" style="border-left: 4px solid ${channel.color};">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
-                                <div class="channel-icon">${channel.icon}</div>
-                                <h6 class="mb-0 text-white fw-semibold">${channel.name}</h6>
+                                <div class="channel-icon" aria-hidden="true">${channel.icon}</div>
+                                <h3 class="h6 mb-0 text-primary fw-semibold">${channel.name}</h3>
                             </div>
-                            <button class="play-btn" id="playBtn-${channel.id}" onclick="togglePlay('${channel.id}')">
-                                <i class="bi bi-play-fill"></i>
+                            <button class="play-btn" id="playBtn-${channel.id}" onclick="togglePlay('${channel.id}')"
+                                    aria-label="${channel.name} - Play/Pause">
+                                <i class="bi bi-play-fill" aria-hidden="true"></i>
                             </button>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label small text-white-soft mb-1">
-                                Volume <span class="float-end text-white" id="volumeLabel-${channel.id}">50%</span>
+                            <label class="form-label small text-secondary mb-1" for="volume-${channel.id}">
+                                Volume <span class="float-end text-primary" id="volumeLabel-${channel.id}">50%</span>
                             </label>
                             <input type="range" class="form-range" min="0" max="100" value="50" 
-                                id="volume-${channel.id}" oninput="updateVolume('${channel.id}', this.value)">
+                                id="volume-${channel.id}" oninput="updateVolume('${channel.id}', this.value)"
+                                aria-label="Volume control">
                         </div>
                         
                         <div class="border-top border-secondary pt-3">
-                            <label class="form-label small text-white-soft fw-bold mb-2">Posisi Spasial 3D</label>
+                            <p class="form-label small text-secondary fw-bold mb-2">Posisi Spasial 3D</p>
                             
                             <div class="mb-2">
-                                <label class="form-label small text-white-muted mb-1">
-                                    X <span class="float-end text-white" id="spatialX-${channel.id}">0.0</span>
+                                <label class="form-label small text-muted mb-1" for="x-${channel.id}">
+                                    X <span class="float-end text-primary" id="spatialX-${channel.id}">0.0</span>
                                 </label>
                                 <input type="range" class="form-range" min="-5" max="5" step="0.1" value="0"
-                                    id="x-${channel.id}" oninput="updateSpatial('${channel.id}', 'x', this.value)">
+                                    id="x-${channel.id}" oninput="updateSpatial('${channel.id}', 'x', this.value)"
+                                    aria-label="X position">
                             </div>
                             
                             <div class="mb-2">
-                                <label class="form-label small text-white-muted mb-1">
-                                    Y <span class="float-end text-white" id="spatialY-${channel.id}">0.0</span>
+                                <label class="form-label small text-muted mb-1" for="y-${channel.id}">
+                                    Y <span class="float-end text-primary" id="spatialY-${channel.id}">0.0</span>
                                 </label>
                                 <input type="range" class="form-range" min="-5" max="5" step="0.1" value="0"
-                                    id="y-${channel.id}" oninput="updateSpatial('${channel.id}', 'y', this.value)">
+                                    id="y-${channel.id}" oninput="updateSpatial('${channel.id}', 'y', this.value)"
+                                    aria-label="Y position">
                             </div>
                             
                             <div class="mb-0">
-                                <label class="form-label small text-white-muted mb-1">
-                                    Z <span class="float-end text-white" id="spatialZ-${channel.id}">-1.0</span>
+                                <label class="form-label small text-muted mb-1" for="z-${channel.id}">
+                                    Z <span class="float-end text-primary" id="spatialZ-${channel.id}">-1.0</span>
                                 </label>
                                 <input type="range" class="form-range" min="-5" max="5" step="0.1" value="-1"
-                                    id="z-${channel.id}" oninput="updateSpatial('${channel.id}', 'z', this.value)">
+                                    id="z-${channel.id}" oninput="updateSpatial('${channel.id}', 'z', this.value)"
+                                    aria-label="Z position">
                             </div>
                         </div>
                     </div>
@@ -2308,68 +2289,107 @@
 
         function togglePlay(channelId) {
             const btn = document.getElementById(`playBtn-${channelId}`);
+            const channel = soundChannels.find(ch => ch.id === channelId);
 
             if (audioPlayers[channelId]) {
-                const player = audioPlayers[channelId];
-                player.noiseGenerators.forEach(gen => gen.stop());
-                delete audioPlayers[channelId];
+                stopAmbientSound(channelId);
                 btn.classList.remove('active');
                 btn.innerHTML = '<i class="bi bi-play-fill"></i>';
+                if (channel) btn.setAttribute('aria-label', `${channel.name} - Play`);
             } else {
-                const player = createAmbientSound(channelId);
-                audioPlayers[channelId] = player;
-                const volumeSlider = document.getElementById(`volume-${channelId}`);
-                updateVolume(channelId, volumeSlider.value);
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+                try {
+                    const player = createAmbientSound(channelId);
+                    if (!player) return;
+                    
+                    audioPlayers[channelId] = player;
+                    const volumeSlider = document.getElementById(`volume-${channelId}`);
+                    updateVolume(channelId, volumeSlider.value);
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="bi bi-pause-fill"></i>';
+                    if (channel) btn.setAttribute('aria-label', `${channel.name} - Pause`);
+                } catch (error) {
+                    console.error('Error playing ambient sound:', error);
+                    showToast('Gagal memutar suara ambient', 'error');
+                }
+            }
+        }
+
+        function stopAmbientSound(channelId) {
+            const player = audioPlayers[channelId];
+            if (!player) return;
+            
+            try {
+                player.noiseGenerators.forEach(gen => {
+                    try { gen.stop(); gen.disconnect(); } catch(e) {}
+                });
+                if (player.masterGain) player.masterGain.disconnect();
+                if (player.masterFilter) player.masterFilter.disconnect();
+                if (player.spatialPanner) player.spatialPanner.disconnect();
+                delete audioPlayers[channelId];
+            } catch (error) {
+                console.error('Error stopping ambient sound:', error);
             }
         }
 
         function updateVolume(channelId, value) {
             document.getElementById(`volumeLabel-${channelId}`).textContent = `${value}%`;
-            if (audioPlayers[channelId]) {
-                audioPlayers[channelId].masterGain.gain.value = value / 100;
+            
+            if (debounceTimers.volume[channelId]) {
+                clearTimeout(debounceTimers.volume[channelId]);
             }
+            
+            debounceTimers.volume[channelId] = setTimeout(() => {
+                if (audioPlayers[channelId]) {
+                    audioPlayers[channelId].masterGain.gain.value = value / 100;
+                }
+            }, CONFIG.DEBOUNCE_DELAY);
         }
 
         function updateSpatial(channelId, axis, value) {
             document.getElementById(`spatial${axis.toUpperCase()}-${channelId}`).textContent = parseFloat(value).toFixed(1);
-            if (audioPlayers[channelId]) {
-                const panner = audioPlayers[channelId].spatialPanner;
-                const floatValue = parseFloat(value);
-                if (axis === 'x') panner.setPosition(floatValue, panner.positionY.value, panner.positionZ.value);
-                else if (axis === 'y') panner.setPosition(panner.positionX.value, floatValue, panner.positionZ.value);
-                else if (axis === 'z') panner.setPosition(panner.positionX.value, panner.positionY.value, floatValue);
+            
+            const key = `${channelId}-${axis}`;
+            if (debounceTimers.spatial[key]) {
+                clearTimeout(debounceTimers.spatial[key]);
             }
+            
+            debounceTimers.spatial[key] = setTimeout(() => {
+                if (audioPlayers[channelId]) {
+                    const panner = audioPlayers[channelId].spatialPanner;
+                    const floatValue = parseFloat(value);
+                    
+                    if (axis === 'x') panner.positionX.value = floatValue;
+                    else if (axis === 'y') panner.positionY.value = floatValue;
+                    else if (axis === 'z') panner.positionZ.value = floatValue;
+                }
+            }, CONFIG.DEBOUNCE_DELAY);
         }
 
-        function stopAllSounds() {
-            Object.keys(audioPlayers).forEach(channelId => {
-                const player = audioPlayers[channelId];
-                if (player) player.noiseGenerators.forEach(gen => gen.stop());
-            });
-            audioPlayers = {};
-        }
-
+        // ===== TIMER =====
         function setTimer(minutes) {
             timerSeconds = minutes * 60;
             document.getElementById('stopTimerBtn').style.display = 'inline-block';
+            
             if (timerInterval) clearInterval(timerInterval);
+            
             timerInterval = setInterval(() => {
                 timerSeconds--;
                 updateTimerDisplay();
+                
                 if (timerSeconds <= 0) {
                     stopTimer();
-                    stopAllSounds();
-                    stopAllMusic();
-                    alert('Waktu habis!');
+                    cleanupAudio();
+                    showToast('⏰ Waktu habis! Semua suara dihentikan.', 'info');
                 }
             }, 1000);
+            
             updateTimerDisplay();
+            showToast(`⏰ Timer diatur: ${minutes} menit`, 'success');
         }
 
         function stopTimer() {
             if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
             timerSeconds = 0;
             updateTimerDisplay();
             document.getElementById('stopTimerBtn').style.display = 'none';
@@ -2378,16 +2398,30 @@
         function updateTimerDisplay() {
             const mins = Math.floor(timerSeconds / 60);
             const secs = timerSeconds % 60;
-            document.getElementById('timerDisplay').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            document.getElementById('timerDisplay').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
+        // ===== PRESETS =====
         function savePreset() {
             const name = document.getElementById('presetName').value.trim();
+            
             if (!name) {
-                alert('Masukkan nama preset!');
+                showToast('Masukkan nama preset!', 'error');
                 return;
             }
-            const preset = { name: name, channels: {} };
+            
+            if (name.length < 3) {
+                showToast('Nama preset minimal 3 karakter', 'error');
+                return;
+            }
+            
+            const preset = { 
+                name: name, 
+                channels: {},
+                createdAt: new Date().toISOString()
+            };
+            
             soundChannels.forEach(channel => {
                 preset.channels[channel.id] = {
                     playing: audioPlayers[channel.id] !== undefined,
@@ -2397,94 +2431,89 @@
                     z: document.getElementById(`z-${channel.id}`).value
                 };
             });
+            
             presets.push(preset);
-            currentUser.presets = presets;
             saveUserData();
             document.getElementById('presetName').value = '';
             renderPresets();
-            alert('Preset berhasil disimpan!');
+            
+            showToast(`✅ Preset "${name}" berhasil disimpan!`, 'success');
         }
 
-        function loadPreset(index) {
+        async function loadPreset(index) {
             const preset = presets[index];
-            stopAllSounds();
-            setTimeout(() => {
-                soundChannels.forEach(channel => {
-                    const settings = preset.channels[channel.id];
-                    document.getElementById(`volume-${channel.id}`).value = settings.volume;
-                    document.getElementById(`x-${channel.id}`).value = settings.x;
-                    document.getElementById(`y-${channel.id}`).value = settings.y;
-                    document.getElementById(`z-${channel.id}`).value = settings.z;
-                    updateVolume(channel.id, settings.volume);
-                    updateSpatial(channel.id, 'x', settings.x);
-                    updateSpatial(channel.id, 'y', settings.y);
-                    updateSpatial(channel.id, 'z', settings.z);
-                    if (settings.playing) togglePlay(channel.id);
-                });
-            }, 300);
+            
+            if (!preset) {
+                showToast('Preset tidak ditemukan', 'error');
+                return;
+            }
+            
+            // Stop all sounds
+            Object.keys(audioPlayers).forEach(channelId => stopAmbientSound(channelId));
+            
+            // Wait for audio to stop
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // Load settings
+            for (const channel of soundChannels) {
+                const settings = preset.channels[channel.id];
+                if (!settings) continue;
+                
+                document.getElementById(`volume-${channel.id}`).value = settings.volume;
+                document.getElementById(`x-${channel.id}`).value = settings.x;
+                document.getElementById(`y-${channel.id}`).value = settings.y;
+                document.getElementById(`z-${channel.id}`).value = settings.z;
+                
+                updateVolume(channel.id, settings.volume);
+                updateSpatial(channel.id, 'x', settings.x);
+                updateSpatial(channel.id, 'y', settings.y);
+                updateSpatial(channel.id, 'z', settings.z);
+                
+                if (settings.playing) {
+                    await new Promise(resolve => {
+                        togglePlay(channel.id);
+                        setTimeout(resolve, 50);
+                    });
+                }
+            }
+            
+            showToast(`🎵 Preset "${preset.name}" dimuat`, 'success');
         }
 
         function deletePreset(index) {
-            if (confirm('Hapus preset ini?')) {
-                presets.splice(index, 1);
-                currentUser.presets = presets;
-                saveUserData();
-                renderPresets();
-            }
+            if (!confirm('Hapus preset ini?')) return;
+            
+            const presetName = presets[index].name;
+            presets.splice(index, 1);
+            saveUserData();
+            renderPresets();
+            
+            showToast(`Preset "${presetName}" dihapus`, 'success');
         }
 
         function renderPresets() {
             const container = document.getElementById('presetList');
+            
             if (presets.length === 0) {
-                container.innerHTML = '<p class="text-white-muted text-center small mb-0">Belum ada preset tersimpan</p>';
+                container.innerHTML = '<p class="text-muted text-center small mb-0">Belum ada preset tersimpan</p>';
                 return;
             }
+            
             container.innerHTML = presets.map((preset, index) => `
-                <div class="preset-badge d-flex align-items-center gap-2">
-                    <i class="bi bi-music-note-beamed text-white"></i>
-                    <span class="text-white fw-semibold" onclick="loadPreset(${index})" style="cursor: pointer;">${preset.name}</span>
-                    <button class="btn btn-sm btn-danger ms-2" onclick="deletePreset(${index})" style="padding: 0.15rem 0.4rem;">
-                        <i class="bi bi-x"></i>
+                <div class="preset-badge d-flex align-items-center gap-2" role="listitem">
+                    <i class="bi bi-music-note-beamed text-primary" aria-hidden="true"></i>
+                    <span class="text-primary fw-semibold" onclick="loadPreset(${index})" 
+                          style="cursor: pointer;" tabindex="0" role="button"
+                          onkeypress="if(event.key==='Enter') loadPreset(${index})">${preset.name}</span>
+                    <button class="btn btn-sm btn-danger ms-2" onclick="deletePreset(${index})" 
+                            style="padding: 0.15rem 0.4rem;" aria-label="Delete preset ${preset.name}">
+                        <i class="bi bi-x" aria-hidden="true"></i>
                     </button>
                 </div>
             `).join('');
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('App loaded'); // Debug log
-            
-            // Test localStorage
-            try {
-                localStorage.setItem('test', 'works');
-                const test = localStorage.getItem('test');
-                console.log('localStorage test:', test);
-                localStorage.removeItem('test');
-            } catch (error) {
-                console.error('localStorage not available:', error);
-                alert('PERINGATAN: Penyimpanan data tidak tersedia. Pastikan WebView mengaktifkan localStorage!');
-            }
-            
-            // Initialize background slider
-            initBackgroundSlider();
-            
-            const savedUser = localStorage.getItem('sonoraCurrentUser');
-            if (savedUser) {
-                try {
-                    currentUser = JSON.parse(savedUser);
-                    console.log('User auto-login:', currentUser.email);
-                    loadUserData();
-                    showMainApp();
-                } catch (error) {
-                    console.error('Auto-login error:', error);
-                    showLogin();
-                }
-            } else {
-                console.log('No saved user, showing login');
-                showLogin();
-            }
-        });
-
-        // Background Image Slider
+        // ===== BACKGROUND SLIDER =====
         function initBackgroundSlider() {
             const slides = document.querySelectorAll('.auth-bg-slide');
             let currentSlide = 0;
@@ -2495,9 +2524,119 @@
                 slides[currentSlide].classList.add('active');
             }
             
-            // Change slide every 5 seconds
             setInterval(nextSlide, 5000);
         }
+
+        // ===== INITIALIZATION =====
+        function initApp() {
+            console.log('🎵 SONORA Perfect Edition - Initializing...');
+            
+            // Test localStorage
+            try {
+                Storage.set('test', 'works');
+                const test = Storage.get('test');
+                if (test === 'works') {
+                    console.log('✅ localStorage available');
+                    Storage.remove('test');
+                } else {
+                    throw new Error('localStorage test failed');
+                }
+            } catch (error) {
+                console.error('❌ localStorage not available:', error);
+                showToast('⚠️ Penyimpanan data tidak tersedia. Data tidak akan tersimpan!', 'error');
+            }
+            
+            // Load theme
+            const savedTheme = Storage.get('sonoraTheme', 'dark');
+            isLightMode = savedTheme === 'light';
+            document.body.classList.toggle('light-mode', isLightMode);
+            updateThemeIcons();
+            
+            // Initialize background slider
+            initBackgroundSlider();
+            
+            // Check for saved user
+            const savedUser = Storage.get('sonoraCurrentUser');
+            if (savedUser) {
+                try {
+                    currentUser = savedUser;
+                    console.log('✅ Auto-login:', currentUser.email);
+                    loadUserData();
+                    showMainApp();
+                } catch (error) {
+                    console.error('❌ Auto-login error:', error);
+                    Storage.remove('sonoraCurrentUser');
+                    showLogin();
+                }
+            } else {
+                console.log('ℹ️ No saved user, showing login');
+                showLogin();
+            }
+            
+            console.log('✅ SONORA initialized successfully!');
+        }
+
+        // ===== EVENT LISTENERS =====
+        window.addEventListener('beforeunload', () => {
+            console.log('🧹 Page unloading, cleaning up...');
+            cleanupAudio();
+            stopTimer();
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                console.log('📱 App hidden, suspending audio...');
+                if (audioContext && audioContext.state === 'running') {
+                    audioContext.suspend();
+                }
+            } else {
+                console.log('📱 App visible, resuming audio...');
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }
+        });
+
+        window.addEventListener('focus', () => {
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume().then(() => {
+                    console.log('✅ Audio context resumed on focus');
+                });
+            }
+        });
+
+        // Initialize on DOM ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        // Expose functions to window
+        window.toggleTheme = toggleTheme;
+        window.showBeranda = showBeranda;
+        window.showLogin = showLogin;
+        window.showRegister = showRegister;
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+        window.testLogin = testLogin;
+        window.handleLogout = handleLogout;
+        window.uploadMusic = uploadMusic;
+        window.showDemoMusicMenu = showDemoMusicMenu;
+        window.toggleMusic = toggleMusic;
+        window.updateMusicVolume = updateMusicVolume;
+        window.deleteMusic = deleteMusic;
+        window.togglePlay = togglePlay;
+        window.updateVolume = updateVolume;
+        window.updateSpatial = updateSpatial;
+        window.setTimer = setTimer;
+        window.stopTimer = stopTimer;
+        window.savePreset = savePreset;
+        window.loadPreset = loadPreset;
+        window.deletePreset = deletePreset;
+        window.scrollToTop = scrollToTop;
+
+        console.log('🎉 SONORA Perfect Edition 10/10 loaded!');
     </script>
 </body>
 </html>
